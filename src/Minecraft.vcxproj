@@ -1,0 +1,883 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|PS3">
+      <Configuration>Debug</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|PS3">
+      <Configuration>Release</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCTargetsPath Condition="'$(VCTargetsPath12)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath12)</VCTargetsPath>
+    <ProjectGuid>{EA3FCC7F-D264-4AAE-90F5-6A1725F4A646}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>SNC</PlatformToolset>
+    <NoTocRestore>NoTocRestore1</NoTocRestore>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>SNC</PlatformToolset>
+    <NoTocRestore>NoTocRestore1</NoTocRestore>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(DebuggerFlavor)'=='PS3Debugger'" Label="OverrideDebuggerDefaults">
+    <!--LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand-->
+    <!--LocalDebuggerCommandArguments></LocalDebuggerCommandArguments-->
+    <!--LocalDebuggerCommandLine>-r -e -m</LocalDebuggerCommandLine-->
+    <!--LocalRunCommandLine>-r</LocalRunCommandLine-->
+    <!--LocalTunerCommandLine></LocalTunerCommandLine-->
+    <!--LocalDebuggerFileServingDirectory>$(ProjectDir)</LocalDebuggerFileServingDirectory-->
+    <!--LocalDebuggerHomeDirectory>$(ProjectDir)</LocalDebuggerHomeDirectory-->
+    <!--LocalDebuggerProjectFile></LocalDebuggerProjectFile-->
+    <!--LocalDebuggerResetType>Soft</LocalDebuggerResetType-->
+    <!--LocalDebuggerClearTty>False</LocalDebuggerClearTty-->
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(SN_PS3_PATH)\ppu\include\sn;$(SCE_PS3_ROOT)\target\ppu\include;$(SCE_PS3_ROOT)\target\common\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Link>
+      <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
+      <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <OptimizationLevel>Level2</OptimizationLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(SN_PS3_PATH)\ppu\include\sn;$(SCE_PS3_ROOT)\target\ppu\include;$(SCE_PS3_ROOT)\target\common\include;$(SDKS)boost_1_36_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
+      <FastMath>true</FastMath>
+      <Branchless>Branchless2</Branchless>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Link>
+      <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
+      <InfoStripping>StripSymsAndDebug</InfoStripping>
+      <DataStripping>StripFuncsAndData</DataStripping>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="Hooking.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\DetourHook.cpp" />
+    <ClCompile Include="Memory\Pattern.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Submenus.cpp" />
+    <ClCompile Include="Memory\Memory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\blockentity\BlockEntity.h" />
+    <ClInclude Include="Engine\blockentity\BlockEntityFactory.h" />
+    <ClInclude Include="Engine\blockentity\BlockEntityType.h" />
+    <ClInclude Include="Engine\blockentity\ChestBlockEntity.h" />
+    <ClInclude Include="Engine\blockentity\FunaceBlockEntity.h" />
+    <ClInclude Include="Engine\blockentity\MobSpawnerBlockEntity.h" />
+    <ClInclude Include="Engine\blockentity\SignBlockEntity.h" />
+    <ClInclude Include="Engine\block\Block.h" />
+    <ClInclude Include="Engine\block\BlockProperty.h" />
+    <ClInclude Include="Engine\block\DoorBlock.h" />
+    <ClInclude Include="Engine\block\EntityBlock.h" />
+    <ClInclude Include="Engine\block\HalfTransparentBlock.h" />
+    <ClInclude Include="Engine\block\HeavyBlock.h" />
+    <ClInclude Include="Engine\block\material\Material.h" />
+    <ClInclude Include="Engine\block\material\MaterialType.h" />
+    <ClInclude Include="Engine\block\TransparentBlock.h" />
+    <ClInclude Include="Engine\client\App.h" />
+    <ClInclude Include="Engine\client\AppPlatform.h" />
+    <ClInclude Include="Engine\client\AppPlatformListener.h" />
+    <ClInclude Include="Engine\client\AppPlatform_android.h" />
+    <ClInclude Include="Engine\client\AppPlatform_android23.h" />
+    <ClInclude Include="Engine\client\audio\SoundEngine.h" />
+    <ClInclude Include="Engine\client\audio\SoundEvent.h" />
+    <ClInclude Include="Engine\client\audio\SoundRepository.h" />
+    <ClInclude Include="Engine\client\gamemode\CreativeMode.h" />
+    <ClInclude Include="Engine\client\gamemode\GameMode.h" />
+    <ClInclude Include="Engine\client\gamemode\GameMode.hpp" />
+    <ClInclude Include="Engine\client\gamemode\SurvivalMode.h" />
+    <ClInclude Include="Engine\client\game\ClientSkinInfoData.h" />
+    <ClInclude Include="Engine\client\game\MinecraftClient.h" />
+    <ClInclude Include="Engine\client\game\ServerSkinInfoData.h" />
+    <ClInclude Include="Engine\client\game\SkinInfoData.h" />
+    <ClInclude Include="Engine\client\game\SkinInfoFactory.h" />
+    <ClInclude Include="Engine\client\gui\BlankButton.h" />
+    <ClInclude Include="Engine\client\gui\Button.h" />
+    <ClInclude Include="Engine\client\gui\components\GuiElement.h" />
+    <ClInclude Include="Engine\client\gui\components\GuiElementContainer.h" />
+    <ClInclude Include="Engine\client\gui\components\OptionsGroup.h" />
+    <ClInclude Include="Engine\client\gui\components\OptionsPane.h" />
+    <ClInclude Include="Engine\client\gui\Font.h" />
+    <ClInclude Include="Engine\client\gui\Gui.h" />
+    <ClInclude Include="Engine\client\gui\GuiComponent.h" />
+    <ClInclude Include="Engine\client\gui\GuiElement.h" />
+    <ClInclude Include="Engine\client\gui\GuiElementContainer.h" />
+    <ClInclude Include="Engine\client\gui\gui\Gui.h" />
+    <ClInclude Include="Engine\client\gui\gui\GuiComponent.h" />
+    <ClInclude Include="Engine\client\gui\gui\ScreenRenderer.h" />
+    <ClInclude Include="Engine\client\gui\HeaderButton.h" />
+    <ClInclude Include="Engine\client\gui\IInventoryPaneCallback.h" />
+    <ClInclude Include="Engine\client\gui\ImageButton.h" />
+    <ClInclude Include="Engine\client\gui\ImageDef.h" />
+    <ClInclude Include="Engine\client\gui\ImageWithBackground.h" />
+    <ClInclude Include="Engine\client\gui\IntRectangle.h" />
+    <ClInclude Include="Engine\client\gui\InventoryPane.h" />
+    <ClInclude Include="Engine\client\gui\Label.h" />
+    <ClInclude Include="Engine\client\gui\LargeImageButton.h" />
+    <ClInclude Include="Engine\client\gui\Mouse.h" />
+    <ClInclude Include="Engine\client\gui\MouseDevice.h" />
+    <ClInclude Include="Engine\client\gui\MoveInput.h" />
+    <ClInclude Include="Engine\client\gui\Multitouch.h" />
+    <ClInclude Include="Engine\client\gui\NinePatchLayer.h" />
+    <ClInclude Include="Engine\client\gui\OptionsGroup.h" />
+    <ClInclude Include="Engine\client\gui\OptionsPane.h" />
+    <ClInclude Include="Engine\client\gui\PackedScrollContainer.h" />
+    <ClInclude Include="Engine\client\gui\ProgressBar.h" />
+    <ClInclude Include="Engine\client\gui\RectangleArea.h" />
+    <ClInclude Include="Engine\client\gui\screens\ChatScreen.h" />
+    <ClInclude Include="Engine\client\gui\screens\OptionsScreen.h" />
+    <ClInclude Include="Engine\client\gui\screens\StartMenuScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\AbstractScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\BaseScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\ChatScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\ConfirmScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\CreateWorldScreenType.h" />
+    <ClInclude Include="Engine\client\gui\screen\DisconnectionScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\OptionsScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\PauseScreen.h" />
+    <ClInclude Include="Engine\client\gui\screen\Screen.h" />
+    <ClInclude Include="Engine\client\gui\screen\ScreenChooser.h" />
+    <ClInclude Include="Engine\client\gui\screen\StartMenuScreen.h" />
+    <ClInclude Include="Engine\client\gui\ScrollingPane.h" />
+    <ClInclude Include="Engine\client\gui\Slider.h" />
+    <ClInclude Include="Engine\client\gui\TButton.h" />
+    <ClInclude Include="Engine\client\gui\TextBox.h" />
+    <ClInclude Include="Engine\client\gui\THeader.h" />
+    <ClInclude Include="Engine\client\gui\TouchAreaModel.h" />
+    <ClInclude Include="Engine\client\gui\TouchInputMove.h" />
+    <ClInclude Include="Engine\client\gui\UIScreenType.h" />
+    <ClInclude Include="Engine\client\MemoryTracker.h" />
+    <ClInclude Include="Engine\client\Minecraft.h" />
+    <ClInclude Include="Engine\client\MinecraftClient.h" />
+    <ClInclude Include="Engine\client\model\HumanoidModel.h" />
+    <ClInclude Include="Engine\client\model\Model.h" />
+    <ClInclude Include="Engine\client\model\ModelPart.h" />
+    <ClInclude Include="Engine\client\model\QuadrupedModel.h" />
+    <ClInclude Include="Engine\client\options\Options.h" />
+    <ClInclude Include="Engine\client\options\Whitelist.h" />
+    <ClInclude Include="Engine\client\options\WhitelistFile.h" />
+    <ClInclude Include="Engine\client\player\LocalPlayer.h" />
+    <ClInclude Include="Engine\client\player\RemotePlayer.h" />
+    <ClInclude Include="Engine\client\renderer\entity\EntityRenderDispatcher.h" />
+    <ClInclude Include="Engine\client\renderer\entity\EntityRenderer.h" />
+    <ClInclude Include="Engine\client\renderer\entity\EntityShaderManager.h" />
+    <ClInclude Include="Engine\client\renderer\entity\MobRenderer.h" />
+    <ClInclude Include="Engine\client\renderer\ItemRenderChunkType.h" />
+    <ClInclude Include="Engine\client\renderer\ItemRenderer.h" />
+    <ClInclude Include="Engine\client\renderer\LevelRenderer.h" />
+    <ClInclude Include="Engine\client\renderer\MaterialPtr.h" />
+    <ClInclude Include="Engine\client\renderer\Matrix.h" />
+    <ClInclude Include="Engine\client\renderer\MatrixStack.h" />
+    <ClInclude Include="Engine\client\renderer\RenderMaterialGroup.h" />
+    <ClInclude Include="Engine\client\renderer\ScreenRenderer.h" />
+    <ClInclude Include="Engine\client\renderer\Tessellator.h" />
+    <ClInclude Include="Engine\client\renderer\texture\NinePatchDescription.h" />
+    <ClInclude Include="Engine\client\renderer\texture\NinePatchFactory.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureAtlas.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureAtlasTextureItem.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureData.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureFile.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureGroup.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureTessellator.h" />
+    <ClInclude Include="Engine\client\renderer\texture\TextureUVCoordinateSet.h" />
+    <ClInclude Include="Engine\client\renderer\TileTessellator.h" />
+    <ClInclude Include="Engine\client\resources\ClientSkinInfoData.h" />
+    <ClInclude Include="Engine\client\resources\ExternalServerFile.h" />
+    <ClInclude Include="Engine\client\resources\I18n.h" />
+    <ClInclude Include="Engine\client\resources\ServerSkinInfoData.h" />
+    <ClInclude Include="Engine\client\resources\SkinInfo.h" />
+    <ClInclude Include="Engine\client\resources\SkinInfoData.h" />
+    <ClInclude Include="Engine\client\settings\IConfigListener.h" />
+    <ClInclude Include="Engine\client\settings\Options.h" />
+    <ClInclude Include="Engine\command\ClientCommands.h" />
+    <ClInclude Include="Engine\command\ServerCommandParser.h" />
+    <ClInclude Include="Engine\command\ServerCommands.h" />
+    <ClInclude Include="Engine\entity\AgableMob.h" />
+    <ClInclude Include="Engine\entity\BodyControl.h" />
+    <ClInclude Include="Engine\entity\Entity.h" />
+    <ClInclude Include="Engine\entity\FlyingMob.h" />
+    <ClInclude Include="Engine\entity\goal\ArrowAttackGoal.h" />
+    <ClInclude Include="Engine\entity\goal\AvoidMobTypeGoal.h" />
+    <ClInclude Include="Engine\entity\goal\BegGoal.h" />
+    <ClInclude Include="Engine\entity\goal\BreakDoorGoal.h" />
+    <ClInclude Include="Engine\entity\goal\BreedGoal.h" />
+    <ClInclude Include="Engine\entity\goal\DoorInteractGoal.h" />
+    <ClInclude Include="Engine\entity\goal\EatTileGoal.h" />
+    <ClInclude Include="Engine\entity\goal\FleeSunGoal.h" />
+    <ClInclude Include="Engine\entity\goal\FollowOwnerGoal.h" />
+    <ClInclude Include="Engine\entity\goal\FollowParentGoal.h" />
+    <ClInclude Include="Engine\entity\goal\Goal.h" />
+    <ClInclude Include="Engine\entity\goal\HurtByTargetGoal.h" />
+    <ClInclude Include="Engine\entity\goal\InteractGoal.h" />
+    <ClInclude Include="Engine\entity\goal\JumpControl.h" />
+    <ClInclude Include="Engine\entity\goal\LeapAtTargetGoal.h" />
+    <ClInclude Include="Engine\entity\goal\LookAtMobGoal.h" />
+    <ClInclude Include="Engine\entity\goal\LookAtPlayerGoal.h" />
+    <ClInclude Include="Engine\entity\goal\LookControl.h" />
+    <ClInclude Include="Engine\entity\goal\MeleeAttackGoal.h" />
+    <ClInclude Include="Engine\entity\goal\MountPathingGoal.h" />
+    <ClInclude Include="Engine\entity\goal\MoveControl.h" />
+    <ClInclude Include="Engine\entity\goal\PanicGoal.h" />
+    <ClInclude Include="Engine\entity\goal\RandomLookAroundGoal.h" />
+    <ClInclude Include="Engine\entity\goal\RandomStrollGoal.h" />
+    <ClInclude Include="Engine\entity\goal\RestrictSunGoal.h" />
+    <ClInclude Include="Engine\entity\goal\Sensing.h" />
+    <ClInclude Include="Engine\entity\goal\SilverfishMergeWithStoneGoal.h" />
+    <ClInclude Include="Engine\entity\goal\SilverfishWakeUpFriendsGoal.h" />
+    <ClInclude Include="Engine\entity\goal\SitGoal.h" />
+    <ClInclude Include="Engine\entity\goal\SlimeAttackGoal.h" />
+    <ClInclude Include="Engine\entity\goal\SlimeFloatGoal.h" />
+    <ClInclude Include="Engine\entity\goal\SwellGoal.h" />
+    <ClInclude Include="Engine\entity\goal\TargetGoal.h" />
+    <ClInclude Include="Engine\entity\goal\TemptGoal.h" />
+    <ClInclude Include="Engine\entity\HangingEntity.h" />
+    <ClInclude Include="Engine\entity\item\ItemEntity.h" />
+    <ClInclude Include="Engine\entity\Mob.h" />
+    <ClInclude Include="Engine\entity\MobFactory.h" />
+    <ClInclude Include="Engine\entity\monster\Creeper.h" />
+    <ClInclude Include="Engine\entity\monster\EnderMan.h" />
+    <ClInclude Include="Engine\entity\monster\Ghast.h" />
+    <ClInclude Include="Engine\entity\monster\Monster.h" />
+    <ClInclude Include="Engine\entity\monster\PigZombie.h" />
+    <ClInclude Include="Engine\entity\monster\Slime.h" />
+    <ClInclude Include="Engine\entity\monster\Zombie.h" />
+    <ClInclude Include="Engine\entity\passive\Animal.h" />
+    <ClInclude Include="Engine\entity\passive\Chicken.h" />
+    <ClInclude Include="Engine\entity\passive\Cow.h" />
+    <ClInclude Include="Engine\entity\passive\Pig.h" />
+    <ClInclude Include="Engine\entity\passive\Sheep.h" />
+    <ClInclude Include="Engine\entity\passive\Squid.h" />
+    <ClInclude Include="Engine\entity\passive\TamableAnimal.h" />
+    <ClInclude Include="Engine\entity\passive\WaterAnimal.h" />
+    <ClInclude Include="Engine\entity\passive\Wolf.h" />
+    <ClInclude Include="Engine\entity\PathfinderMob.h" />
+    <ClInclude Include="Engine\entity\player\Abilities.h" />
+    <ClInclude Include="Engine\entity\player\Inventory.h" />
+    <ClInclude Include="Engine\entity\player\LocalPlayer.h" />
+    <ClInclude Include="Engine\entity\player\Player.h" />
+    <ClInclude Include="Engine\entity\player\RemotePlayer.h" />
+    <ClInclude Include="Engine\entity\player\ServerPlayer.h" />
+    <ClInclude Include="Engine\entity\projectile\Arrow.h" />
+    <ClInclude Include="Engine\entity\projectile\Snowball.h" />
+    <ClInclude Include="Engine\entity\projectile\Throwable.h" />
+    <ClInclude Include="Engine\entity\projectile\ThrownEgg.h" />
+    <ClInclude Include="Engine\entity\SynchedEntityData.h" />
+    <ClInclude Include="Engine\gamemode\CreativeMode.h" />
+    <ClInclude Include="Engine\gamemode\GameMode.h" />
+    <ClInclude Include="Engine\gamemode\GameType.h" />
+    <ClInclude Include="Engine\gamemode\MultiPlayerGameMode.h" />
+    <ClInclude Include="Engine\gamemode\ServerPlayerGameMode.h" />
+    <ClInclude Include="Engine\gamemode\SurvivalMode.h" />
+    <ClInclude Include="Engine\header\blockentity\BlockEntity.h" />
+    <ClInclude Include="Engine\header\blockentity\BlockEntityFactory.h" />
+    <ClInclude Include="Engine\header\blockentity\BlockEntityType.h" />
+    <ClInclude Include="Engine\header\blockentity\ChestBlockEntity.h" />
+    <ClInclude Include="Engine\header\blockentity\FunaceBlockEntity.h" />
+    <ClInclude Include="Engine\header\blockentity\MobSpawnerBlockEntity.h" />
+    <ClInclude Include="Engine\header\blockentity\SignBlockEntity.h" />
+    <ClInclude Include="Engine\header\block\Block.h" />
+    <ClInclude Include="Engine\header\block\BlockProperty.h" />
+    <ClInclude Include="Engine\header\block\DoorBlock.h" />
+    <ClInclude Include="Engine\header\block\EntityBlock.h" />
+    <ClInclude Include="Engine\header\block\HalfTransparentBlock.h" />
+    <ClInclude Include="Engine\header\block\HeavyBlock.h" />
+    <ClInclude Include="Engine\header\block\material\Material.h" />
+    <ClInclude Include="Engine\header\block\material\MaterialType.h" />
+    <ClInclude Include="Engine\header\block\TransparentBlock.h" />
+    <ClInclude Include="Engine\header\client\App.h" />
+    <ClInclude Include="Engine\header\client\AppPlatform.h" />
+    <ClInclude Include="Engine\header\client\AppPlatformListener.h" />
+    <ClInclude Include="Engine\header\client\AppPlatform_android.h" />
+    <ClInclude Include="Engine\header\client\AppPlatform_android23.h" />
+    <ClInclude Include="Engine\header\client\audio\SoundEngine.h" />
+    <ClInclude Include="Engine\header\client\audio\SoundRepository.h" />
+    <ClInclude Include="Engine\header\client\gui\BlankButton.h" />
+    <ClInclude Include="Engine\header\client\gui\Button.h" />
+    <ClInclude Include="Engine\header\client\gui\Font.h" />
+    <ClInclude Include="Engine\header\client\gui\Gui.h" />
+    <ClInclude Include="Engine\header\client\gui\GuiComponent.h" />
+    <ClInclude Include="Engine\header\client\gui\GuiElement.h" />
+    <ClInclude Include="Engine\header\client\gui\GuiElementContainer.h" />
+    <ClInclude Include="Engine\header\client\gui\HeaderButton.h" />
+    <ClInclude Include="Engine\header\client\gui\IInventoryPaneCallback.h" />
+    <ClInclude Include="Engine\header\client\gui\ImageButton.h" />
+    <ClInclude Include="Engine\header\client\gui\ImageDef.h" />
+    <ClInclude Include="Engine\header\client\gui\ImageWithBackground.h" />
+    <ClInclude Include="Engine\header\client\gui\IntRectangle.h" />
+    <ClInclude Include="Engine\header\client\gui\InventoryPane.h" />
+    <ClInclude Include="Engine\header\client\gui\Label.h" />
+    <ClInclude Include="Engine\header\client\gui\LargeImageButton.h" />
+    <ClInclude Include="Engine\header\client\gui\Mouse.h" />
+    <ClInclude Include="Engine\header\client\gui\MouseDevice.h" />
+    <ClInclude Include="Engine\header\client\gui\MoveInput.h" />
+    <ClInclude Include="Engine\header\client\gui\Multitouch.h" />
+    <ClInclude Include="Engine\header\client\gui\NinePatchLayer.h" />
+    <ClInclude Include="Engine\header\client\gui\OptionsGroup.h" />
+    <ClInclude Include="Engine\header\client\gui\OptionsPane.h" />
+    <ClInclude Include="Engine\header\client\gui\PackedScrollContainer.h" />
+    <ClInclude Include="Engine\header\client\gui\ProgressBar.h" />
+    <ClInclude Include="Engine\header\client\gui\RectangleArea.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\AbstractScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\BaseScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\ChatScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\ConfirmScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\CreateWorldScreenType.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\DisconnectionScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\OptionsScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\PauseScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\Screen.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\ScreenChooser.h" />
+    <ClInclude Include="Engine\header\client\gui\screen\StartMenuScreen.h" />
+    <ClInclude Include="Engine\header\client\gui\ScrollingPane.h" />
+    <ClInclude Include="Engine\header\client\gui\Slider.h" />
+    <ClInclude Include="Engine\header\client\gui\TButton.h" />
+    <ClInclude Include="Engine\header\client\gui\TextBox.h" />
+    <ClInclude Include="Engine\header\client\gui\THeader.h" />
+    <ClInclude Include="Engine\header\client\gui\TouchAreaModel.h" />
+    <ClInclude Include="Engine\header\client\gui\TouchInputMove.h" />
+    <ClInclude Include="Engine\header\client\MemoryTracker.h" />
+    <ClInclude Include="Engine\header\client\Minecraft.h" />
+    <ClInclude Include="Engine\header\client\MinecraftClient.h" />
+    <ClInclude Include="Engine\header\client\model\HumanoidModel.h" />
+    <ClInclude Include="Engine\header\client\model\Model.h" />
+    <ClInclude Include="Engine\header\client\model\ModelPart.h" />
+    <ClInclude Include="Engine\header\client\model\QuadrupedModel.h" />
+    <ClInclude Include="Engine\header\client\renderer\entity\EntityRenderDispatcher.h" />
+    <ClInclude Include="Engine\header\client\renderer\entity\EntityRenderer.h" />
+    <ClInclude Include="Engine\header\client\renderer\entity\EntityShaderManager.h" />
+    <ClInclude Include="Engine\header\client\renderer\entity\MobRenderer.h" />
+    <ClInclude Include="Engine\header\client\renderer\ItemRenderChunkType.h" />
+    <ClInclude Include="Engine\header\client\renderer\ItemRenderer.h" />
+    <ClInclude Include="Engine\header\client\renderer\LevelRenderer.h" />
+    <ClInclude Include="Engine\header\client\renderer\MaterialPtr.h" />
+    <ClInclude Include="Engine\header\client\renderer\Matrix.h" />
+    <ClInclude Include="Engine\header\client\renderer\MatrixStack.h" />
+    <ClInclude Include="Engine\header\client\renderer\RenderMaterialGroup.h" />
+    <ClInclude Include="Engine\header\client\renderer\ScreenRenderer.h" />
+    <ClInclude Include="Engine\header\client\renderer\Tessellator.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\NinePatchDescription.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\NinePatchFactory.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureAtlas.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureAtlasTextureItem.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureData.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureFile.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureGroup.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureTessellator.h" />
+    <ClInclude Include="Engine\header\client\renderer\texture\TextureUVCoordinateSet.h" />
+    <ClInclude Include="Engine\header\client\renderer\TileTessellator.h" />
+    <ClInclude Include="Engine\header\client\resources\ClientSkinInfoData.h" />
+    <ClInclude Include="Engine\header\client\resources\ExternalServerFile.h" />
+    <ClInclude Include="Engine\header\client\resources\I18n.h" />
+    <ClInclude Include="Engine\header\client\resources\ServerSkinInfoData.h" />
+    <ClInclude Include="Engine\header\client\resources\SkinInfo.h" />
+    <ClInclude Include="Engine\header\client\resources\SkinInfoData.h" />
+    <ClInclude Include="Engine\header\client\settings\IConfigListener.h" />
+    <ClInclude Include="Engine\header\client\settings\Options.h" />
+    <ClInclude Include="Engine\header\command\ClientCommands.h" />
+    <ClInclude Include="Engine\header\command\ServerCommandParser.h" />
+    <ClInclude Include="Engine\header\command\ServerCommands.h" />
+    <ClInclude Include="Engine\header\entity\AgableMob.h" />
+    <ClInclude Include="Engine\header\entity\BodyControl.h" />
+    <ClInclude Include="Engine\header\entity\Entity.h" />
+    <ClInclude Include="Engine\header\entity\FlyingMob.h" />
+    <ClInclude Include="Engine\header\entity\goal\ArrowAttackGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\AvoidMobTypeGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\BegGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\BreakDoorGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\BreedGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\DoorInteractGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\EatTileGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\FleeSunGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\FollowOwnerGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\FollowParentGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\Goal.h" />
+    <ClInclude Include="Engine\header\entity\goal\HurtByTargetGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\InteractGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\JumpControl.h" />
+    <ClInclude Include="Engine\header\entity\goal\LeapAtTargetGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\LookAtMobGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\LookAtPlayerGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\LookControl.h" />
+    <ClInclude Include="Engine\header\entity\goal\MeleeAttackGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\MountPathingGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\MoveControl.h" />
+    <ClInclude Include="Engine\header\entity\goal\PanicGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\RandomLookAroundGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\RandomStrollGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\RestrictSunGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\Sensing.h" />
+    <ClInclude Include="Engine\header\entity\goal\SilverfishMergeWithStoneGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\SilverfishWakeUpFriendsGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\SitGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\SlimeAttackGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\SlimeFloatGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\SwellGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\TargetGoal.h" />
+    <ClInclude Include="Engine\header\entity\goal\TemptGoal.h" />
+    <ClInclude Include="Engine\header\entity\HangingEntity.h" />
+    <ClInclude Include="Engine\header\entity\item\ItemEntity.h" />
+    <ClInclude Include="Engine\header\entity\Mob.h" />
+    <ClInclude Include="Engine\header\entity\MobFactory.h" />
+    <ClInclude Include="Engine\header\entity\monster\Creeper.h" />
+    <ClInclude Include="Engine\header\entity\monster\EnderMan.h" />
+    <ClInclude Include="Engine\header\entity\monster\Ghast.h" />
+    <ClInclude Include="Engine\header\entity\monster\Monster.h" />
+    <ClInclude Include="Engine\header\entity\monster\PigZombie.h" />
+    <ClInclude Include="Engine\header\entity\monster\Slime.h" />
+    <ClInclude Include="Engine\header\entity\monster\Zombie.h" />
+    <ClInclude Include="Engine\header\entity\passive\Animal.h" />
+    <ClInclude Include="Engine\header\entity\passive\Chicken.h" />
+    <ClInclude Include="Engine\header\entity\passive\Cow.h" />
+    <ClInclude Include="Engine\header\entity\passive\Pig.h" />
+    <ClInclude Include="Engine\header\entity\passive\Sheep.h" />
+    <ClInclude Include="Engine\header\entity\passive\Squid.h" />
+    <ClInclude Include="Engine\header\entity\passive\TamableAnimal.h" />
+    <ClInclude Include="Engine\header\entity\passive\WaterAnimal.h" />
+    <ClInclude Include="Engine\header\entity\passive\Wolf.h" />
+    <ClInclude Include="Engine\header\entity\PathfinderMob.h" />
+    <ClInclude Include="Engine\header\entity\player\Abilities.h" />
+    <ClInclude Include="Engine\header\entity\player\Inventory.h" />
+    <ClInclude Include="Engine\header\entity\player\LocalPlayer.h" />
+    <ClInclude Include="Engine\header\entity\player\Player.h" />
+    <ClInclude Include="Engine\header\entity\player\RemotePlayer.h" />
+    <ClInclude Include="Engine\header\entity\player\ServerPlayer.h" />
+    <ClInclude Include="Engine\header\entity\projectile\Arrow.h" />
+    <ClInclude Include="Engine\header\entity\projectile\Snowball.h" />
+    <ClInclude Include="Engine\header\entity\projectile\Throwable.h" />
+    <ClInclude Include="Engine\header\entity\projectile\ThrownEgg.h" />
+    <ClInclude Include="Engine\header\entity\SynchedEntityData.h" />
+    <ClInclude Include="Engine\header\gamemode\CreativeMode.h" />
+    <ClInclude Include="Engine\header\gamemode\GameMode.h" />
+    <ClInclude Include="Engine\header\gamemode\GameType.h" />
+    <ClInclude Include="Engine\header\gamemode\SurvivalMode.h" />
+    <ClInclude Include="Engine\header\inventory\BaseContainerMenu.h" />
+    <ClInclude Include="Engine\header\inventory\Container.h" />
+    <ClInclude Include="Engine\header\inventory\FillingContainer.h" />
+    <ClInclude Include="Engine\header\inventory\IContainerListener.h" />
+    <ClInclude Include="Engine\header\inventory\InventoryMenu.h" />
+    <ClInclude Include="Engine\header\item\ActionEnum.h" />
+    <ClInclude Include="Engine\header\item\ArmorItem.h" />
+    <ClInclude Include="Engine\header\item\AuxDataTileItem.h" />
+    <ClInclude Include="Engine\header\item\CreativeItemCategory.h" />
+    <ClInclude Include="Engine\header\item\DiggerItem.h" />
+    <ClInclude Include="Engine\header\item\DoorItem.h" />
+    <ClInclude Include="Engine\header\item\FoodItem.h" />
+    <ClInclude Include="Engine\header\item\HangingEntityItem.h" />
+    <ClInclude Include="Engine\header\item\HatchetItem.h" />
+    <ClInclude Include="Engine\header\item\HoeItem.h" />
+    <ClInclude Include="Engine\header\item\Item.h" />
+    <ClInclude Include="Engine\header\item\ItemInstance.h" />
+    <ClInclude Include="Engine\header\item\PickaxeItem.h" />
+    <ClInclude Include="Engine\header\item\ShovelItem.h" />
+    <ClInclude Include="Engine\header\item\TileItem.h" />
+    <ClInclude Include="Engine\header\item\WeaponItem.h" />
+    <ClInclude Include="Engine\header\level\biome\Biome.h" />
+    <ClInclude Include="Engine\header\level\biome\BiomeDecorator.h" />
+    <ClInclude Include="Engine\header\level\BlockSource.h" />
+    <ClInclude Include="Engine\header\level\BlockSourceListener.h" />
+    <ClInclude Include="Engine\header\level\ChunkCache.h" />
+    <ClInclude Include="Engine\header\level\ChunkPos.h" />
+    <ClInclude Include="Engine\header\level\ChunkSource.h" />
+    <ClInclude Include="Engine\header\level\chunk\LevelChunk.h" />
+    <ClInclude Include="Engine\header\level\chunk\storage\ExternalFileLevelStorageSource.h" />
+    <ClInclude Include="Engine\header\level\Difficulty.h" />
+    <ClInclude Include="Engine\header\level\Explosion.h" />
+    <ClInclude Include="Engine\header\level\GeneratorType.h" />
+    <ClInclude Include="Engine\header\level\Level.h" />
+    <ClInclude Include="Engine\header\level\LevelListener.h" />
+    <ClInclude Include="Engine\header\level\LevelSettings.h" />
+    <ClInclude Include="Engine\header\level\LevelStorage.h" />
+    <ClInclude Include="Engine\header\level\LevelSummary.h" />
+    <ClInclude Include="Engine\header\level\LightLayer.h" />
+    <ClInclude Include="Engine\header\level\MultiPlayerLevel.h" />
+    <ClInclude Include="Engine\header\level\MultiPlayerLevel.hpp" />
+    <ClInclude Include="Engine\header\level\ParticleType.h" />
+    <ClInclude Include="Engine\header\level\RandomLevelSource.h" />
+    <ClInclude Include="Engine\header\level\ServerLevel.h" />
+    <ClInclude Include="Engine\header\level\storage\LevelData.h" />
+    <ClInclude Include="Engine\header\mobeffect\MobEffect.h" />
+    <ClInclude Include="Engine\header\mobeffect\MobEffectInstance.h" />
+    <ClInclude Include="Engine\header\nbt\ByteArrayTag.h" />
+    <ClInclude Include="Engine\header\nbt\ByteTag.h" />
+    <ClInclude Include="Engine\header\nbt\CompoundTag.h" />
+    <ClInclude Include="Engine\header\nbt\DoubleTag.h" />
+    <ClInclude Include="Engine\header\nbt\EndTag.h" />
+    <ClInclude Include="Engine\header\nbt\FloatTag.h" />
+    <ClInclude Include="Engine\header\nbt\Int64Tag.h" />
+    <ClInclude Include="Engine\header\nbt\IntArrayTag.h" />
+    <ClInclude Include="Engine\header\nbt\IntTag.h" />
+    <ClInclude Include="Engine\header\nbt\ListTag.h" />
+    <ClInclude Include="Engine\header\nbt\NamedTag.h" />
+    <ClInclude Include="Engine\header\nbt\ShortTag.h" />
+    <ClInclude Include="Engine\header\nbt\StringTag.h" />
+    <ClInclude Include="Engine\header\nbt\Tag.h" />
+    <ClInclude Include="Engine\header\network\ClientNetworkHandler.h" />
+    <ClInclude Include="Engine\header\network\IRakNetInstance.h" />
+    <ClInclude Include="Engine\header\network\LegacyClientNetworkHandler.h" />
+    <ClInclude Include="Engine\header\network\MinecraftPackets.h" />
+    <ClInclude Include="Engine\header\network\NetEventCallback.h" />
+    <ClInclude Include="Engine\header\network\Packet.h" />
+    <ClInclude Include="Engine\header\network\PacketSender.h" />
+    <ClInclude Include="Engine\header\network\packet\AddEntityPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\AddItemEntityPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\AddPaintingPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\AddPlayerPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\AdventureSettingsPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\AnimatePacket.h" />
+    <ClInclude Include="Engine\header\network\packet\BatchPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerAckPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerClosePacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerOpenPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerSetContentPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerSetDataPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ContainerSetSlotPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\DisconnectPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\DropItemPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\EntityEventPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\ExplodePacket.h" />
+    <ClInclude Include="Engine\header\network\packet\FullChunkDataPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\HurtArmorPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\InteractPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\LevelEventPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\LoginPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\MobEffectPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\MoveEntityPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\MovePlayerPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\PlayerActionPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\PlayerArmorEquipmentPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\PlayerEquipmentPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\PlayerInputPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\PlayStatusPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\RemoveBlockPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\RemoveEntityPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\RemovePlayerPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\RespawnPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetDifficultyPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetEntityDataPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetEntityLinkPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetEntityMotionPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetHealthPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetSpawnPositionPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\SetTimePacket.h" />
+    <ClInclude Include="Engine\header\network\packet\StartGamePacket.h" />
+    <ClInclude Include="Engine\header\network\packet\TakeItemEntityPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\TextPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\TileEntityDataPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\TileEventPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\UpdateBlockPacket.h" />
+    <ClInclude Include="Engine\header\network\packet\UseItemPacket.h" />
+    <ClInclude Include="Engine\header\network\RakNetInstance.h" />
+    <ClInclude Include="Engine\header\network\RakNetPacketSender.h" />
+    <ClInclude Include="Engine\header\network\ServerSideNetworkHandler.h" />
+    <ClInclude Include="Engine\header\pathfinding\PathFinder.h" />
+    <ClInclude Include="Engine\header\pathfinding\PathNavigation.h" />
+    <ClInclude Include="Engine\header\util\AABB.h" />
+    <ClInclude Include="Engine\header\util\BlockID.h" />
+    <ClInclude Include="Engine\header\util\BlockPos.h" />
+    <ClInclude Include="Engine\header\util\Brightness.h" />
+    <ClInclude Include="Engine\header\util\Color.h" />
+    <ClInclude Include="Engine\header\util\EntityDamageByChhildEntitySource.h" />
+    <ClInclude Include="Engine\header\util\EntityDamageByEntitySource.h" />
+    <ClInclude Include="Engine\header\util\EntityDamageByTileSource.h" />
+    <ClInclude Include="Engine\header\util\EntityDamageSource.h" />
+    <ClInclude Include="Engine\header\util\EntityPos.h" />
+    <ClInclude Include="Engine\header\util\File.h" />
+    <ClInclude Include="Engine\header\util\FullBlock.h" />
+    <ClInclude Include="Engine\header\util\Random.h" />
+    <ClInclude Include="Engine\header\util\Token.h" />
+    <ClInclude Include="Engine\header\util\Util.h" />
+    <ClInclude Include="Engine\header\util\Vec2.h" />
+    <ClInclude Include="Engine\header\util\Vec3.h" />
+    <ClInclude Include="Engine\inventory\BaseContainerMenu.h" />
+    <ClInclude Include="Engine\inventory\Container.h" />
+    <ClInclude Include="Engine\inventory\FillingContainer.h" />
+    <ClInclude Include="Engine\inventory\IContainerListener.h" />
+    <ClInclude Include="Engine\inventory\InventoryMenu.h" />
+    <ClInclude Include="Engine\item\ActionEnum.h" />
+    <ClInclude Include="Engine\item\ArmorItem.h" />
+    <ClInclude Include="Engine\item\AuxDataTileItem.h" />
+    <ClInclude Include="Engine\item\CreativeItemCategory.h" />
+    <ClInclude Include="Engine\item\DiggerItem.h" />
+    <ClInclude Include="Engine\item\DoorItem.h" />
+    <ClInclude Include="Engine\item\FoodItem.h" />
+    <ClInclude Include="Engine\item\HangingEntityItem.h" />
+    <ClInclude Include="Engine\item\HatchetItem.h" />
+    <ClInclude Include="Engine\item\HoeItem.h" />
+    <ClInclude Include="Engine\item\Item.h" />
+    <ClInclude Include="Engine\item\ItemInstance.h" />
+    <ClInclude Include="Engine\item\PickaxeItem.h" />
+    <ClInclude Include="Engine\item\ShovelItem.h" />
+    <ClInclude Include="Engine\item\TileItem.h" />
+    <ClInclude Include="Engine\item\WeaponItem.h" />
+    <ClInclude Include="Engine\level\biome\Biome.h" />
+    <ClInclude Include="Engine\level\biome\BiomeDecorator.h" />
+    <ClInclude Include="Engine\level\BlockSource.h" />
+    <ClInclude Include="Engine\level\BlockSourceListener.h" />
+    <ClInclude Include="Engine\level\ChunkCache.h" />
+    <ClInclude Include="Engine\level\ChunkPos.h" />
+    <ClInclude Include="Engine\level\ChunkSource.h" />
+    <ClInclude Include="Engine\level\chunk\LevelChunk.h" />
+    <ClInclude Include="Engine\level\chunk\storage\ExternalFileLevelStorageSource.h" />
+    <ClInclude Include="Engine\level\Difficulty.h" />
+    <ClInclude Include="Engine\level\Explosion.h" />
+    <ClInclude Include="Engine\level\GeneratorType.h" />
+    <ClInclude Include="Engine\level\Level.h" />
+    <ClInclude Include="Engine\level\LevelListener.h" />
+    <ClInclude Include="Engine\level\LevelSettings.h" />
+    <ClInclude Include="Engine\level\LevelStorage.h" />
+    <ClInclude Include="Engine\level\LevelSummary.h" />
+    <ClInclude Include="Engine\level\LightLayer.h" />
+    <ClInclude Include="Engine\level\MultiPlayerLevel.h" />
+    <ClInclude Include="Engine\level\ParticleType.h" />
+    <ClInclude Include="Engine\level\RandomLevelSource.h" />
+    <ClInclude Include="Engine\level\ServerLevel.h" />
+    <ClInclude Include="Engine\level\storage\LevelData.h" />
+    <ClInclude Include="Engine\locale\I18n.h" />
+    <ClInclude Include="Engine\mobeffect\MobEffect.h" />
+    <ClInclude Include="Engine\mobeffect\MobEffectInstance.h" />
+    <ClInclude Include="Engine\nbt\ByteArrayTag.h" />
+    <ClInclude Include="Engine\nbt\ByteTag.h" />
+    <ClInclude Include="Engine\nbt\CompoundTag.h" />
+    <ClInclude Include="Engine\nbt\DoubleTag.h" />
+    <ClInclude Include="Engine\nbt\EndTag.h" />
+    <ClInclude Include="Engine\nbt\FloatTag.h" />
+    <ClInclude Include="Engine\nbt\Int64Tag.h" />
+    <ClInclude Include="Engine\nbt\IntArrayTag.h" />
+    <ClInclude Include="Engine\nbt\IntTag.h" />
+    <ClInclude Include="Engine\nbt\ListTag.h" />
+    <ClInclude Include="Engine\nbt\NamedTag.h" />
+    <ClInclude Include="Engine\nbt\ShortTag.h" />
+    <ClInclude Include="Engine\nbt\StringTag.h" />
+    <ClInclude Include="Engine\nbt\Tag.h" />
+    <ClInclude Include="Engine\network\BatchedPacketSender.h" />
+    <ClInclude Include="Engine\network\ClientNetworkHandler.h" />
+    <ClInclude Include="Engine\network\IRakNetInstance.h" />
+    <ClInclude Include="Engine\network\LegacyClientNetworkHandler.h" />
+    <ClInclude Include="Engine\network\MinecraftPackets.h" />
+    <ClInclude Include="Engine\network\NetEventCallback.h" />
+    <ClInclude Include="Engine\network\Packet.h" />
+    <ClInclude Include="Engine\network\PacketSender.h" />
+    <ClInclude Include="Engine\network\packet\AddEntityPacket.h" />
+    <ClInclude Include="Engine\network\packet\AddItemEntityPacket.h" />
+    <ClInclude Include="Engine\network\packet\AddPaintingPacket.h" />
+    <ClInclude Include="Engine\network\packet\AddPlayerPacket.h" />
+    <ClInclude Include="Engine\network\packet\AdventureSettingsPacket.h" />
+    <ClInclude Include="Engine\network\packet\AnimatePacket.h" />
+    <ClInclude Include="Engine\network\packet\BatchPacket.h" />
+    <ClInclude Include="Engine\network\packet\BlockEntityDataPacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerAckPacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerClosePacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerOpenPacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerSetContentPacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerSetDataPacket.h" />
+    <ClInclude Include="Engine\network\packet\ContainerSetSlotPacket.h" />
+    <ClInclude Include="Engine\network\packet\DisconnectPacket.h" />
+    <ClInclude Include="Engine\network\packet\DropItemPacket.h" />
+    <ClInclude Include="Engine\network\packet\EntityEventPacket.h" />
+    <ClInclude Include="Engine\network\packet\ExplodePacket.h" />
+    <ClInclude Include="Engine\network\packet\FullChunkDataPacket.h" />
+    <ClInclude Include="Engine\network\packet\HurtArmorPacket.h" />
+    <ClInclude Include="Engine\network\packet\InteractPacket.h" />
+    <ClInclude Include="Engine\network\packet\LevelEventPacket.h" />
+    <ClInclude Include="Engine\network\packet\LoginPacket.h" />
+    <ClInclude Include="Engine\network\packet\MobEffectPacket.h" />
+    <ClInclude Include="Engine\network\packet\MoveEntityPacket.h" />
+    <ClInclude Include="Engine\network\packet\MovePlayerPacket.h" />
+    <ClInclude Include="Engine\network\packet\PlayerActionPacket.h" />
+    <ClInclude Include="Engine\network\packet\PlayerArmorEquipmentPacket.h" />
+    <ClInclude Include="Engine\network\packet\PlayerEquipmentPacket.h" />
+    <ClInclude Include="Engine\network\packet\PlayerInputPacket.h" />
+    <ClInclude Include="Engine\network\packet\PlayStatusPacket.h" />
+    <ClInclude Include="Engine\network\packet\RemoveBlockPacket.h" />
+    <ClInclude Include="Engine\network\packet\RemoveEntityPacket.h" />
+    <ClInclude Include="Engine\network\packet\RemovePlayerPacket.h" />
+    <ClInclude Include="Engine\network\packet\RespawnPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetDifficultyPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetEntityDataPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetEntityLinkPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetEntityMotionPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetHealthPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetSpawnPositionPacket.h" />
+    <ClInclude Include="Engine\network\packet\SetTimePacket.h" />
+    <ClInclude Include="Engine\network\packet\StartGamePacket.h" />
+    <ClInclude Include="Engine\network\packet\TakeItemEntityPacket.h" />
+    <ClInclude Include="Engine\network\packet\TextPacket.h" />
+    <ClInclude Include="Engine\network\packet\TileEntityDataPacket.h" />
+    <ClInclude Include="Engine\network\packet\TileEventPacket.h" />
+    <ClInclude Include="Engine\network\packet\UpdateBlockPacket.h" />
+    <ClInclude Include="Engine\network\packet\UseItemPacket.h" />
+    <ClInclude Include="Engine\network\RakNetInstance.h" />
+    <ClInclude Include="Engine\network\RakNetPacketSender.h" />
+    <ClInclude Include="Engine\network\ServerNetworkHandler.h" />
+    <ClInclude Include="Engine\network\ServerSideNetworkHandler.h" />
+    <ClInclude Include="Engine\pathfinding\PathFinder.h" />
+    <ClInclude Include="Engine\pathfinding\PathNavigation.h" />
+    <ClInclude Include="Engine\platform\input\CInput.h" />
+    <ClInclude Include="Engine\platform\input\StickDirection.h" />
+    <ClInclude Include="Engine\platform\threading\BackgroundWorker.h" />
+    <ClInclude Include="Engine\platform\threading\WorkerPool.h" />
+    <ClInclude Include="Engine\server\ServerPlayer.h" />
+    <ClInclude Include="Engine\util\AABB.h" />
+    <ClInclude Include="Engine\util\BlockID.h" />
+    <ClInclude Include="Engine\util\BlockPos.h" />
+    <ClInclude Include="Engine\util\Brightness.h" />
+    <ClInclude Include="Engine\util\Color.h" />
+    <ClInclude Include="Engine\util\Direction.h" />
+    <ClInclude Include="Engine\util\EntityDamageByChhildEntitySource.h" />
+    <ClInclude Include="Engine\util\EntityDamageByEntitySource.h" />
+    <ClInclude Include="Engine\util\EntityDamageByTileSource.h" />
+    <ClInclude Include="Engine\util\EntityDamageSource.h" />
+    <ClInclude Include="Engine\util\EntityPos.h" />
+    <ClInclude Include="Engine\util\File.h" />
+    <ClInclude Include="Engine\util\FullBlock.h" />
+    <ClInclude Include="Engine\util\NewType.h" />
+    <ClInclude Include="Engine\util\Random.h" />
+    <ClInclude Include="Engine\util\Token.h" />
+    <ClInclude Include="Engine\util\Util.h" />
+    <ClInclude Include="Engine\util\UUID.h" />
+    <ClInclude Include="Engine\util\Vec2.h" />
+    <ClInclude Include="Engine\util\Vec3.h" />
+    <ClInclude Include="Engine\world\Container.h" />
+    <ClInclude Include="Engine\world\dimension\Dimension.h" />
+    <ClInclude Include="Engine\world\dimension\DimensionId.h" />
+    <ClInclude Include="Engine\world\entity\AgableMob.h" />
+    <ClInclude Include="Engine\world\entity\Animal.h" />
+    <ClInclude Include="Engine\world\entity\ArmorSlot.h" />
+    <ClInclude Include="Engine\world\entity\Arrow.h" />
+    <ClInclude Include="Engine\world\entity\attribute\Attribute.h" />
+    <ClInclude Include="Engine\world\entity\attribute\AttributeInstance.h" />
+    <ClInclude Include="Engine\world\entity\Blaze.h" />
+    <ClInclude Include="Engine\world\entity\Boat.h" />
+    <ClInclude Include="Engine\world\entity\Chicken.h" />
+    <ClInclude Include="Engine\world\entity\Cow.h" />
+    <ClInclude Include="Engine\world\entity\Creeper.h" />
+    <ClInclude Include="Engine\world\entity\DamageSource.h" />
+    <ClInclude Include="Engine\world\entity\Enderman.h" />
+    <ClInclude Include="Engine\world\entity\Entity.h" />
+    <ClInclude Include="Engine\world\entity\EntityClassTree.h" />
+    <ClInclude Include="Engine\world\entity\EntityDamageByBlockSource.h" />
+    <ClInclude Include="Engine\world\entity\EntityDamageByChildEntitySource.h" />
+    <ClInclude Include="Engine\world\entity\EntityDamageByEntitySource.h" />
+    <ClInclude Include="Engine\world\entity\EntityDamageCause.h" />
+    <ClInclude Include="Engine\world\entity\EntityDamageSource.h" />
+    <ClInclude Include="Engine\world\entity\EntityLink.h" />
+    <ClInclude Include="Engine\world\entity\EntityPos.h" />
+    <ClInclude Include="Engine\world\entity\EntityType.h" />
+    <ClInclude Include="Engine\world\entity\EntityUniqueID.h" />
+    <ClInclude Include="Engine\world\entity\ItemEntity.h" />
+    <ClInclude Include="Engine\world\entity\Mob.h" />
+    <ClInclude Include="Engine\world\entity\Monster.h" />
+    <ClInclude Include="Engine\world\entity\Mushroomcow.h" />
+    <ClInclude Include="Engine\world\entity\PathfinderMob.h" />
+    <ClInclude Include="Engine\world\entity\Pig.h" />
+    <ClInclude Include="Engine\world\entity\player\Abilities.h" />
+    <ClInclude Include="Engine\world\entity\player\Inventory.h" />
+    <ClInclude Include="Engine\world\entity\player\InventoryMenu.h" />
+    <ClInclude Include="Engine\world\entity\player\Player.h" />
+    <ClInclude Include="Engine\world\entity\RemovedEntityDamageByType.h" />
+    <ClInclude Include="Engine\world\entity\Sheep.h" />
+    <ClInclude Include="Engine\world\entity\Skeleton.h" />
+    <ClInclude Include="Engine\world\entity\SynchedEntityData.h" />
+    <ClInclude Include="Engine\world\entity\WaterAnimal.h" />
+    <ClInclude Include="Engine\world\entity\Zombie.h" />
+    <ClInclude Include="Engine\world\event\EntityEvent.h" />
+    <ClInclude Include="Engine\world\event\LevelEvent.h" />
+    <ClInclude Include="Engine\world\GameType.h" />
+    <ClInclude Include="Engine\world\inventory\BaseContainerMenu.h" />
+    <ClInclude Include="Engine\world\inventory\ContainerType.h" />
+    <ClInclude Include="Engine\world\inventory\FillingContainer.h" />
+    <ClInclude Include="Engine\world\item\ArmorItem.h" />
+    <ClInclude Include="Engine\world\item\Item.h" />
+    <ClInclude Include="Engine\world\item\ItemInstance.h" />
+    <ClInclude Include="Engine\world\level\BlockSource.h" />
+    <ClInclude Include="Engine\world\level\BlockSourceListener.h" />
+    <ClInclude Include="Engine\world\level\block\Block.h" />
+    <ClInclude Include="Engine\world\level\block\BlockPos.h" />
+    <ClInclude Include="Engine\world\level\block\BlockProperty.h" />
+    <ClInclude Include="Engine\world\level\block\entity\BlockEntity.h" />
+    <ClInclude Include="Engine\world\level\block\entity\BlockEntityType.h" />
+    <ClInclude Include="Engine\world\level\block\MaterialType.h" />
+    <ClInclude Include="Engine\world\level\Brightness.h" />
+    <ClInclude Include="Engine\world\level\ChunkSource.h" />
+    <ClInclude Include="Engine\world\level\DBStorage.h" />
+    <ClInclude Include="Engine\world\level\Difficulty.h" />
+    <ClInclude Include="Engine\world\level\Level.h" />
+    <ClInclude Include="Engine\world\level\LevelListener.h" />
+    <ClInclude Include="Engine\world\level\LevelSettings.h" />
+    <ClInclude Include="Engine\world\level\ParticleType.h" />
+    <ClInclude Include="Engine\world\level\PlayerChunkSource.h" />
+    <ClInclude Include="Engine\world\level\storage\LevelData.h" />
+    <ClInclude Include="Engine\world\level\storage\LevelStorage.h" />
+    <ClInclude Include="Engine\world\level\storage\StorageVersion.h" />
+    <ClInclude Include="Engine\world\Minecraft.h" />
+    <ClInclude Include="Engine\world\mobeffect\MobEffect.h" />
+    <ClInclude Include="Engine\world\mobeffect\MobEffectInstance.h" />
+    <ClInclude Include="Engine\world\phys\AABB.h" />
+    <ClInclude Include="Engine\world\phys\HitResult.h" />
+    <ClInclude Include="Engine\world\phys\Matrix.h" />
+    <ClInclude Include="Engine\world\phys\Vec2.h" />
+    <ClInclude Include="Engine\world\phys\Vec3.h" />
+    <ClInclude Include="Enums.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Helpers.hpp" />
+    <ClInclude Include="Hooking.hpp" />
+    <ClInclude Include="Memory\DetourHook.hpp" />
+    <ClInclude Include="Memory\Pattern.hpp" />
+    <ClInclude Include="Menu.hpp" />
+    <ClInclude Include="Submenus.hpp" />
+    <ClInclude Include="Util\Exports.hpp" />
+    <ClInclude Include="Memory\Memory.hpp" />
+    <ClInclude Include="Util\NewDeleteOverride.hpp" />
+    <ClInclude Include="Util\TimeHelpers.hpp" />
+  </ItemGroup>
+  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
