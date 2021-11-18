@@ -22,21 +22,21 @@
 
 [Minecraft PE headers](https://github.com/KsyMC/MCPEHeader)
 
-[Minecraft PE Hooking Java](https://github.com/zhuowei/MCPELauncher/blob/master/src/net/zhuoweizhang/mcpelauncher/ScriptManager.java)
+[Block Launcher scripting in Java](https://github.com/zhuowei/MCPELauncher/blob/master/src/net/zhuoweizhang/mcpelauncher/ScriptManager.java)
 
 [Minecraft PE Hooking C](https://github.com/zhuowei/MCPELauncher/blob/a26ab5a905e691d5bb4d207916e8eaa92fdf2ef8/jni/modscript.c)
 
-[Minecraft PE Hooking](https://github.com/ryanterry131/PocketPower)
+[Minecraft PE Hooking CPP](https://github.com/ryanterry131/modpe_ios/blob/master/callbacks.cpp)
 
-[Minecraft PE Hooking](https://github.com/ryanterry131/modpe_ios/blob/master/callbacks.cpp)
-
-[Minecraft PE Hooking](https://github.com/Razzile/HorizonPE/blob/master/Hooks.cpp)
+[Horizon PE Hooking CPP](https://github.com/Razzile/HorizonPE/blob/master/Hooks.cpp)
 
 [Minecraft Block ids](https://github.com/MCMrARM/minecraft-block-ids/blob/master/blocks_274.json)
 
 [Minecraft Colors](https://minecraft.gamepedia.com/Formatting_codes#Color_codes)
 
 [Minecraft Java Source](https://github.com/ObelouixServer/Minecraft-1.12/blob/master/src/minecraft/net/minecraft/client/renderer/BufferBuilder.java)
+
+[Minecraft Java Classes](https://github.com/Awe23123/Optifine-1.12-SRC/tree/master/src/net/minecraft)
 
 # Credits
 Assuming
