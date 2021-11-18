@@ -87,6 +87,7 @@ void HostTab()
    g_Menu.option(L"Invulnerability").toggle(g_Helpers.selfInvulnerability);
    g_Menu.option(L"OneHitKill").toggle(g_Helpers.combatOneHitKill);
    g_Menu.option(L"Nuker").toggle(g_Helpers.nuker);
+   g_Menu.option(L"Option by vin");
 }
 
 void DebugTab()

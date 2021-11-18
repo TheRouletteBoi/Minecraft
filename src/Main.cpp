@@ -35,8 +35,10 @@ int Minecraft_Main(int argc, char* argv[])
    sys_ppu_thread_create(&gMinecraftThreadId, [](uint64_t arg)
    {
       sleep_for(10000);
-
+	  printf("sleep done\n");
       g_GameVariables = new GameVariables();
+	  printf("game variables\n");
+
       g_Helpers = Helpers();
       g_Menu = Menu(MainMenu, CombatTab, MovementTab, PlayerTab);
 

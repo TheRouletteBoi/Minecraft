@@ -72,6 +72,9 @@
       <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
       <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(TargetDir)loadSprx.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <ClCompile>
@@ -91,6 +94,9 @@
       <InfoStripping>StripSymsAndDebug</InfoStripping>
       <DataStripping>StripFuncsAndData</DataStripping>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(TargetDir)loadSprx.exe"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
