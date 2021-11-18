@@ -73,7 +73,7 @@
       <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
     </Link>
     <PostBuildEvent>
-      <Command>"$(TargetDir)loadSprx.exe"</Command>
+      <Command>IF EXIST "$(TargetDir)loadSprx.exe"  "$(TargetDir)loadSprx.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
