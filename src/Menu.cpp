@@ -1,9 +1,18 @@
 #include "Menu.hpp"
 
 Menu g_Menu;
+Menu::TabComponent g_CombatTab;
+Menu::TabComponent g_MovmentTab;
+Menu::TabComponent g_PlayerTab;
+Menu::TabComponent g_VisualTab;
+Menu::TabComponent g_WorldTab;
+Menu::TabComponent g_ItemTab;
+Menu::TabComponent g_EnchantmentTab;
+Menu::TabComponent g_HostTab;
+Menu::TabComponent g_DebugTab;
 
-Menu::Menu(Function mainmenu, Function firstTab, Function secondTab, Function thirdTab) 
-   : m_MainMenu(mainmenu), m_FirstTab(firstTab), m_SecondTab(secondTab), m_ThirdTab(thirdTab)
+Menu::Menu(Function mainmenu, Function firstTab, Function secondTab, Function thirdTab, Function fourthTab)
+   : m_MainMenu(mainmenu), m_FirstTab(firstTab), m_SecondTab(secondTab), m_ThirdTab(thirdTab), m_FourthTab(fourthTab)
 {
 
 }
@@ -110,11 +119,14 @@ void Menu::UpdateDrawing()
    UpdateEditTabPlacement();
    for (const auto& tab : m_TabList)
    {
-      GetTabComponent(tab.tabFn).TotalOptions = GetTabComponent(tab.tabFn).PrintingOption;
-      GetTabComponent(tab.tabFn).PrintingOption = 0;
-      GetTabComponent(tab.tabFn).TabBaseY = GetTabComponent(tab.tabFn).TabPosY;
       if (tab.isRunning)
+      {
+         GetTabComponent(tab.tabFn).TotalOptions = GetTabComponent(tab.tabFn).PrintingOption;
+         GetTabComponent(tab.tabFn).PrintingOption = 0;
+         GetTabComponent(tab.tabFn).TabBaseY = GetTabComponent(tab.tabFn).TabPosY;
+
          tab.tabFn();
+      }
    }
 }
 
@@ -140,7 +152,7 @@ void Menu::UpdateEditTabPlacement()
 
       if (stickX != 0.0)
       {
-         uint32_t xAdvance = GetTabComponent(m_ActiveTab).TabPosX + stickX * 5.0;
+         int32_t xAdvance = GetTabComponent(m_ActiveTab).TabPosX + stickX * 5.0;
          if (xAdvance < 350 || xAdvance < 0)
          {
             GetTabComponent(m_ActiveTab).TabPosX += stickX * 5.0;
@@ -149,7 +161,7 @@ void Menu::UpdateEditTabPlacement()
 
       if (stickY != 0.0)
       {
-         uint32_t yAdvance = GetTabComponent(m_ActiveTab).TabPosY + stickY * 5.0;
+         int32_t yAdvance = GetTabComponent(m_ActiveTab).TabPosY + stickY * 5.0;
          if (yAdvance < 220 || yAdvance < 0)
          {
             GetTabComponent(m_ActiveTab).TabPosY += stickY * 5.0;
@@ -194,8 +206,22 @@ void Menu::WhileOpen()
 
 void Menu::WhileClosed()
 {
-   if (IsOpenPressed())
+   //if (IsOpenPressed())
       OnOpen();
+}
+
+
+void Menu::AddTabToListIfNotInListNew(Function fn, int32_t xPos, int32_t yPos)
+{
+   // search for tab function
+   auto searchTab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tab)
+      {
+         return tab.tabFn == fn;
+      });
+
+   // if not found then add it to the map
+   if (searchTab == m_TabList.end())
+      m_TabList.push_back(TabComponent(fn, true, xPos, yPos));
 }
 
 void Menu::OnOpen()
@@ -205,7 +231,10 @@ void Menu::OnOpen()
       if (m_OnFirstTimeOpen)
          m_OnFirstTimeOpen();
 
-      m_ActiveTab = m_MainMenu;
+      AddTabToListIfNotInListNew(m_FirstTab, 90, 3);
+      AddTabToListIfNotInListNew(m_SecondTab, 161, 3);
+      AddTabToListIfNotInListNew(m_ThirdTab, 234, 3);
+      AddTabToListIfNotInListNew(m_FourthTab, 329, 3);
 
       m_FirstTimeOpen = false;
    }
@@ -214,6 +243,8 @@ void Menu::OnOpen()
 
    // Tabs
    m_MainMenuCurrentTab = (m_MainMenuSavedCurrentTab == 0) ? 1 : m_MainMenuSavedCurrentTab;
+
+   m_ActiveTab = m_MainMenu;
 
    // Tab Options
    GetTabComponent(m_ActiveTab).CurrentOption = (GetTabComponent(m_ActiveTab).SavedCurrentOption == 0) ? 1 : GetTabComponent(m_ActiveTab).SavedCurrentOption;
@@ -285,31 +316,17 @@ bool Menu::tabPressed()
    return false;
 }
 
-bool Menu::IsTabDisplayed(Function fn)
+void Menu::AddTabToListIfNotInList(const TabComponent& comp)
 {
    // search for tab function
-   auto foundTab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tab)
+   auto searchTab = std::find_if(m_TabList.begin(), m_TabList.end(), [comp](const TabComponent& tab)
    {
-      return tab.tabFn == fn;
-   });
-
-   if (foundTab != m_TabList.end())
-      return (*foundTab).isRunning;
-
-   return false;
-}
-
-void Menu::AddTabToListIfNotInList(Function fn)
-{
-   // search for tab function
-   auto searchTab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tab)
-   {
-      return tab.tabFn == fn;
+      return tab.tabFn == comp.tabFn;
    });
 
    // if not found then add it to the map
    if (searchTab == m_TabList.end())
-      m_TabList.push_back(TabComponent(fn, false));
+      m_TabList.push_back(comp);
 }
 
 bool Menu::tabHovered()
@@ -330,170 +347,43 @@ Menu& Menu::tabmenu(const std::wstring& text)
    return *this;
 }
 
-Menu& Menu::toggleTab(Function fn)
+Menu& Menu::toggleTab(const TabComponent& comp)
 {
-   DrawTabToggle(IsTabDisplayed(fn));
+   DrawTabToggle(comp.isRunning);
 
    if (tabPressed())
    {
-      AddTabToListIfNotInList(fn);
+      //AddTabToListIfNotInList(comp);
 
       // search for tab function and if found activate the tab
-      auto currentTab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tab)
+      auto currentTab = std::find_if(m_TabList.begin(), m_TabList.end(), [comp](const TabComponent& tab)
       {
-         return tab.tabFn == fn;
+         return tab.tabFn == comp.tabFn;
       });
 
       if (currentTab != m_TabList.end())
          (*currentTab).isRunning ^= 1;
    }
 
-   if (tabHovered() && IsTabDisplayed(fn) && ButtonPressed(BUTTON_L3))
+   if (tabHovered() && comp.isRunning && ButtonPressed(BUTTON_L3))
       m_CanEditTabPlacement ^= 1;
 
    return *this;
 }
 
-bool Menu::pressed()
-{
-   if (hovered())
-   {
-      return IsEnterPressed();
-   }
-   return false;
-} 
-
 Menu::TabComponent& Menu::GetTabComponent(Function fn)
 {
    // search for tab function
-   auto tab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& layout)
+   auto tab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tabComp)
    {
-      return layout.tabFn == fn;
+      return tabComp.tabFn == fn;
    });
 
    if (tab != m_TabList.end())
       return *tab;
 
-   static TabComponent tablayout(nullptr, false);
-   return tablayout;
-}
-
-bool Menu::hovered()
-{
-   return GetTabComponent(m_ActiveTab).CurrentOption == GetTabComponent(m_ActiveTab).PrintingOption;
-}
-
-void Menu::banner(const std::wstring& text)
-{
-   DrawShadowText(text, 
-      GetTabComponent(m_ActiveTab).TabPosX, 
-      GetTabComponent(m_ActiveTab).TabBaseY + (GetTabComponent(m_ActiveTab).TabTitleHeight / 2), 
-      GetTabComponent(m_ActiveTab).TabTitleTextColor, false);
-
-   GetTabComponent(m_ActiveTab).TabBaseY += GetTabComponent(m_ActiveTab).TabTitleHeight;
-}
-
-Menu& Menu::option(const std::wstring& text)
-{
-   GetTabComponent(m_ActiveTab).PrintingOption++;
-   DrawMenuOption(text);
-   return *this;
-}
-
-Menu& Menu::toggle(bool& var)
-{
-   DrawMenuToggle(var);
-
-   if (pressed())
-   {
-      var ^= 1;
-   }
-
-   return *this;
-}
-
-Menu& Menu::toggle(bool& var, Function onEnable, Function onDisable)
-{
-   DrawMenuToggle(var);
-
-   if (pressed())
-   {
-      var ^= 1;
-
-      if (var)
-      {
-         if (onEnable != nullptr)
-            onEnable();
-      }
-      else
-      {
-         if (onDisable != nullptr)
-            onDisable();
-      }
-   }
-
-   return *this;
-}
-
-Menu& Menu::local(bool var)
-{
-   DrawMenuToggle(var);
-   return *this;
-}
-
-Menu& Menu::action(OptionAction opt, Function fn)
-{
-   if (hovered())
-   {
-      if (opt == OptionAction::EnterPress && IsEnterPressed())
-      {
-         fn();
-         return *this;
-      }
-      else if (opt == OptionAction::LeftPress && IsLeftPressed())
-      {
-         fn();
-         return *this;
-      }
-      else if (opt == OptionAction::RightPress && IsRightPressed())
-      {
-         fn();
-         return *this;
-      }
-      else if (opt == OptionAction::LeftOrRightPress && IsLeftOrRightPressed())
-      {
-         fn();
-         return *this;
-      }
-      else if (opt == OptionAction::SquarePress && IsSquarePressed())
-      {
-         fn();
-         return *this;
-      }
-   }
-   return *this;
-}
-
-Menu& Menu::scroller(const std::vector<std::wstring>& display, int& index)
-{
-   int min = 0;
-   int max = static_cast<int>(display.size()) - 1;
-   processOptionItemControls<int>(index, min, max, 1);
-
-   if (index > static_cast<int>(display.size()) || index < 0)
-      return *this;
-
-   DrawMenuTextScroller(display[index].c_str());
-   return *this;
-}
-
-Menu& Menu::keyboard(const std::wstring& windowTitle, const std::wstring& defaultText, size_t maxInputLength, KeyboardHandler handler)
-{
-   if (pressed())
-   {
-      DisplayKeyboard(windowTitle, defaultText, maxInputLength, reinterpret_cast<void*>(handler));
-   }
-   return *this;
+   static TabComponent tabComponent(nullptr, false);
+   return tabComponent;
 }
 
 void Menu::DrawTabOptions(const std::wstring& text)
@@ -520,16 +410,16 @@ void Menu::DrawTabOptions(const std::wstring& text)
    if (haultIndex > m_MainMenuTabOptionsPerPage || haultIndex <= 0)
       return;
 
-   /*DrawRect(
+   DrawRect(
       m_MainMenuPosX,
       m_MainMenuBaseY + (m_MainMenuOptionHeight / 2),
-      m_MainMenuWidth,
-      m_MainMenuOptionHeight,
-      tabHovered() ? m_MainMenuTabBackgroundColorHighlighted : m_MainMenuTabBackgroundColor);*/
+      70,
+      170,
+      m_MainMenuTabBackgroundColor);
 
-   DrawText(text, 
-      m_MainMenuPosX, 
-      m_MainMenuBaseY + (m_MainMenuOptionHeight / 2), 
+   DrawText(text,
+      m_MainMenuPosX,
+      m_MainMenuBaseY + (m_MainMenuOptionHeight / 2),
       tabHovered() ? m_MainMenuTabTextColorHighlighted : m_MainMenuTabTextColor);
 
    m_MainMenuBaseY += m_MainMenuOptionHeight;
@@ -537,56 +427,7 @@ void Menu::DrawTabOptions(const std::wstring& text)
 
 void Menu::DrawTabToggle(bool var)
 {
-   DrawRect(
-      m_MainMenuPosX,
-      m_MainMenuBaseY + (m_MainMenuOptionHeight / 2),
-      4, 
-      4,
-      var ? GetTabComponent(m_ActiveTab).ToggleColorOn : GetTabComponent(m_ActiveTab).ToggleColorOff);
-}
-
-void Menu::DrawMenuOption(const std::wstring& text)
-{
-   size_t haultIndex = 0;
-   if ((GetTabComponent(m_ActiveTab).CurrentOption < GetTabComponent(m_ActiveTab).StartInfiniteScroll 
-      && GetTabComponent(m_ActiveTab).PrintingOption <= GetTabComponent(m_ActiveTab).OptionsPerPage) 
-      || GetTabComponent(m_ActiveTab).TotalOptions <= GetTabComponent(m_ActiveTab).OptionsPerPage)
-   {
-      haultIndex = GetTabComponent(m_ActiveTab).PrintingOption;
-   }
-   else
-   {
-      if (GetTabComponent(m_ActiveTab).CurrentOption >= GetTabComponent(m_ActiveTab).StartInfiniteScroll)
-      {
-         if (GetTabComponent(m_ActiveTab).CurrentOption > (GetTabComponent(m_ActiveTab).TotalOptions - GetTabComponent(m_ActiveTab).EndInfiniteScroll))
-         {
-            haultIndex = GetTabComponent(m_ActiveTab).StartInfiniteScroll + (GetTabComponent(m_ActiveTab).EndInfiniteScroll - (GetTabComponent(m_ActiveTab).TotalOptions - GetTabComponent(m_ActiveTab).PrintingOption));
-         }
-         else
-         {
-            haultIndex = GetTabComponent(m_ActiveTab).StartInfiniteScroll + (GetTabComponent(m_ActiveTab).PrintingOption - GetTabComponent(m_ActiveTab).CurrentOption);
-         }
-      }
-   }
-   if (haultIndex > GetTabComponent(m_ActiveTab).OptionsPerPage || haultIndex <= 0)
-      return;
-
-   DrawText(text, 
-      GetTabComponent(m_ActiveTab).TabPosX, 
-      GetTabComponent(m_ActiveTab).TabBaseY + (GetTabComponent(m_ActiveTab).TabOptionHeight / 2), 
-      hovered() ? GetTabComponent(m_ActiveTab).TextColorHighlighted : GetTabComponent(m_ActiveTab).TextColor);
-
-   GetTabComponent(m_ActiveTab).TabBaseY += GetTabComponent(m_ActiveTab).TabOptionHeight;
-}
-
-void Menu::DrawMenuToggle(bool var)
-{
-
-}
-
-void Menu::DrawMenuTextScroller(const std::wstring& var)
-{
-
+   //float yPosAtOption = m_MainMenuBaseY - m_MainMenuOptionHeight;
 }
 
 void Menu::Tick()

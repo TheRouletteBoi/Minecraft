@@ -34,18 +34,45 @@ int Minecraft_Main(int argc, char* argv[])
 {
    sys_ppu_thread_create(&gMinecraftThreadId, [](uint64_t arg)
    {
+#if NDEBUG
       sleep_for(10000);
+#endif
 
       g_GameVariables = new GameVariables();
       g_Helpers = Helpers();
-      g_Menu = Menu(MainMenu, CombatTab, MovementTab, PlayerTab);
+      g_Menu = Menu(MainMenu, CombatTab, MovementTab, PlayerTab, ItemTab);
 
       HookingInitiate();
 
       g_Menu.RegisterOnMain([]
       {
+         
+
          printf("welcome to minecraft sprx mod menu\n");
       });
+
+
+      // everything under here is bad and must be changed. it adds a submenu here and in Menu::OnOpen() so there are 2 instances of the submenu. BADDDd
+      g_CombatTab = Menu::TabComponent(CombatTab, false);
+      g_MovmentTab = Menu::TabComponent(MovementTab, false);
+      g_PlayerTab = Menu::TabComponent(PlayerTab, false);
+      g_VisualTab = Menu::TabComponent(VisualTab, false);
+      g_WorldTab = Menu::TabComponent(WorldTab, false);
+      g_ItemTab = Menu::TabComponent(ItemTab, false);
+      g_EnchantmentTab = Menu::TabComponent(EnchantmentTab, false);
+      g_HostTab = Menu::TabComponent(HostTab, false);
+      g_DebugTab = Menu::TabComponent(DebugTab, false);
+
+
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(CombatTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(MovementTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(PlayerTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(VisualTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(WorldTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(ItemTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(EnchantmentTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(HostTab, false));
+      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(DebugTab, false));
 
       sys_ppu_thread_exit(0);
 
