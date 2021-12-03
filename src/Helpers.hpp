@@ -35,6 +35,7 @@ public:
 void DrawText(const std::wstring& text, uint32_t x, uint32_t y, Color color);
 void DrawShadowText(const std::wstring& text, uint32_t x, uint32_t y, Color color, bool centered);
 void DrawRect(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Color color);
+void DrawGradient(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Color colorTop, Color colorBottom);
 void DisplayKeyboard(const std::wstring& title, const std::wstring& defaultText, size_t maxInputLength, void* callback);
 std::string GetKeyboardResult();
 int GetControlValue(eButtons button);

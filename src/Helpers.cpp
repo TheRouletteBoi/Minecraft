@@ -23,7 +23,11 @@ void DrawShadowText(const std::wstring& text, uint32_t x, uint32_t y, Color colo
 void DrawRect(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Color color)
 {
    g_GameVariables->GuiComponent_fill(g_GuiComponent, x, y, width, height, color.ToHex());
-   //g_GameVariables->GuiComponent_fillGradient(g_GuiComponent, x, y, width, height, color.ToHex(), color.ToHex());
+}
+
+void DrawGradient(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Color colorTop, Color colorBottom)
+{
+   g_GameVariables->GuiComponent_fillGradient(g_GuiComponent, x, y, width, height, colorTop.ToHex(), colorBottom.ToHex());
 }
 
 void DisplayKeyboard(const std::wstring& title, const std::wstring& defaultText, size_t maxInputLength, void* callback)
