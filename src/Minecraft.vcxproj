@@ -107,6 +107,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Submenus.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
+    <ClCompile Include="Util\SystemCalls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\blockentity\BlockEntity.h" />
@@ -879,6 +880,7 @@
     <ClInclude Include="Util\Exports.hpp" />
     <ClInclude Include="Memory\Memory.hpp" />
     <ClInclude Include="Util\NewDeleteOverride.hpp" />
+    <ClInclude Include="Util\SystemCalls.hpp" />
     <ClInclude Include="Util\TimeHelpers.hpp" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
