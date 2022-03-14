@@ -80,7 +80,7 @@ void Gui_renderHook(GuiComponent* gui, double unk)
    gui_renderHk->GetOriginal<void>(gui, unk);
 
    // drawing must be called after the original
-   g_Menu.OnGameTick();
+   g_MenuTab.OnGameTick();
 }
 
 uint32_t LivingEntity_onChangedBlockHook(Entity* entity, BlockPos* pos)

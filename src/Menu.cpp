@@ -1,23 +1,8 @@
 #include "Menu.hpp"
 
-Menu g_Menu;
-Menu::TabComponent g_CombatTab;
-Menu::TabComponent g_MovmentTab;
-Menu::TabComponent g_PlayerTab;
-Menu::TabComponent g_VisualTab;
-Menu::TabComponent g_WorldTab;
-Menu::TabComponent g_ItemTab;
-Menu::TabComponent g_EnchantmentTab;
-Menu::TabComponent g_HostTab;
-Menu::TabComponent g_DebugTab;
+MenuTab g_MenuTab;
 
-Menu::Menu(Function mainmenu, Function firstTab, Function secondTab, Function thirdTab, Function fourthTab)
-   : m_MainMenu(mainmenu), m_FirstTab(firstTab), m_SecondTab(secondTab), m_ThirdTab(thirdTab), m_FourthTab(fourthTab)
-{
-
-}
-
-void Menu::OnGameTick()
+void MenuBase::OnGameTick()
 {
    if (!IsInitialized())
       Initialize();
@@ -25,30 +10,35 @@ void Menu::OnGameTick()
    Tick();
 }
 
-bool Menu::IsInitialized()
+bool MenuBase::IsInitialized()
 {
    return m_Initialized;
 }
 
-void Menu::Initialize()
+void MenuBase::Initialize()
 {
-   if (m_OnMain != nullptr)
+   if (m_OnMain)
       m_OnMain();
 
    m_Initialized = true;
 }
 
-void Menu::RegisterOnMain(Function onMain)
+void MenuBase::RegisterOnMain(Function onMain)
 {
    m_OnMain = onMain;
 }
 
-void Menu::RegisterOnFirstTimeOpen(Function onFirstTime)
+void MenuBase::RegisterOnFirstTimeOpen(Function onFirstTime)
 {
    m_OnFirstTimeOpen = onFirstTime;
 }
 
-bool Menu::IsEnterPressed()
+bool MenuBase::IsOpenPressed()
+{
+   return IsButtonBinds(BUTTON_L1, BUTTON_PAD_UP);
+}
+
+bool MenuBase::IsEnterPressed()
 {
    if (ButtonPressed(BUTTON_CROSS))
    {
@@ -59,7 +49,7 @@ bool Menu::IsEnterPressed()
    return false;
 }
 
-bool Menu::IsLeftPressed()
+bool MenuBase::IsLeftPressed()
 {
    if (ButtonPressed(BUTTON_PAD_LEFT))
    {
@@ -70,7 +60,7 @@ bool Menu::IsLeftPressed()
    return false;
 }
 
-bool Menu::IsRightPressed()
+bool MenuBase::IsRightPressed()
 {
    if (ButtonPressed(BUTTON_PAD_RIGHT))
    {
@@ -81,7 +71,7 @@ bool Menu::IsRightPressed()
    return false;
 }
 
-bool Menu::IsLeftOrRightPressed()
+bool MenuBase::IsLeftOrRightPressed()
 {
    if (ButtonPressed(BUTTON_PAD_LEFT) || ButtonPressed(BUTTON_PAD_RIGHT))
    {
@@ -92,7 +82,7 @@ bool Menu::IsLeftOrRightPressed()
    return false;
 }
 
-bool Menu::IsSquarePressed()
+bool MenuBase::IsSquarePressed()
 {
    if (ButtonPressed(BUTTON_SQUARE))
    {
@@ -103,75 +93,52 @@ bool Menu::IsSquarePressed()
    return false;
 }
 
-bool Menu::IsOpenPressed()
+void MenuBase::OnOpen()
 {
-   return IsButtonBinds(BUTTON_L1, BUTTON_PAD_UP);
-}
-
-void Menu::UpdateDrawing()
-{
-   m_MainMenuTotalTabs = m_MainMenuPrintingTab;
-   m_MainMenuPrintingTab = 0;
-   m_MainMenuBaseY = m_MainMenuPosY;
-   m_MainMenu();
-
-
-   UpdateEditTabPlacement();
-   for (const auto& tab : m_TabList)
+   if (m_FirstTimeOpen)
    {
-      if (tab.isRunning)
-      {
-         GetTabComponent(tab.tabFn).TotalOptions = GetTabComponent(tab.tabFn).PrintingOption;
-         GetTabComponent(tab.tabFn).PrintingOption = 0;
-         GetTabComponent(tab.tabFn).TabBaseY = GetTabComponent(tab.tabFn).TabPosY;
+      if (m_OnFirstTimeOpen)
+         m_OnFirstTimeOpen();
 
-         tab.tabFn();
-      }
+      m_FirstTimeOpen = false;
    }
+
+   m_Opened = true;
+
+   PlayUISoundSelect();
 }
 
-void Menu::UpdateEditTabPlacement()
+void MenuBase::OnClose()
 {
-   if (m_CanEditTabPlacement)
-   {
-      // 360 max for right
-      // 0 max for left
-      // 
-      // -5 max for up
-      // 220 max for down
+   m_Opened = false;
 
-      // check if we are out of bounds 
-      /*if (m_TabPosX > 350 || m_TabPosX < 0)
-         return;
-
-      if (m_TabPosY > 220 || m_TabPosY < 0)
-         return;*/
-
-      double stickX = GetLeftJoyStickX();
-      double stickY = -GetLeftJoyStickY();
-
-      if (stickX != 0.0)
-      {
-         int32_t xAdvance = GetTabComponent(m_ActiveTab).TabPosX + stickX * 5.0;
-         if (xAdvance < 350 || xAdvance < 0)
-         {
-            GetTabComponent(m_ActiveTab).TabPosX += stickX * 5.0;
-         }
-      }
-
-      if (stickY != 0.0)
-      {
-         int32_t yAdvance = GetTabComponent(m_ActiveTab).TabPosY + stickY * 5.0;
-         if (yAdvance < 220 || yAdvance < 0)
-         {
-            GetTabComponent(m_ActiveTab).TabPosY += stickY * 5.0;
-         }
-      }
-
-   }
+   PlayUISoundBack();
 }
 
-void Menu::UpdateButtons()
+void MenuBase::OnScrollUp()
+{
+   PlayUISoundScroll();
+}
+
+void MenuBase::OnScrollDown()
+{
+
+   PlayUISoundScroll();
+}
+
+void MenuBase::OnTabPrevious()
+{
+
+   PlayUISoundSelect();
+}
+
+void MenuBase::OnTabNext()
+{
+
+   PlayUISoundSelect();
+}
+
+void MenuBase::UpdateButtons()
 {
    if (ButtonPressed(BUTTON_CIRCLE))
    {
@@ -187,255 +154,29 @@ void Menu::UpdateButtons()
    }
    if (ButtonPressed(BUTTON_L1))
    {
-      OnTabLeft();
+      OnTabPrevious();
    }
    if (ButtonPressed(BUTTON_R1))
    {
-      OnTabRight();
+      OnTabNext();
    }
 
    if (IsOpenPressed())
       OnClose();
 }
 
-void Menu::WhileOpen()
+void MenuBase::WhileOpen()
 {
-   UpdateDrawing();
    UpdateButtons();
 }
 
-void Menu::WhileClosed()
+void MenuBase::WhileClosed()
 {
-   //if (IsOpenPressed())
-      OnOpen();
+   if (IsOpenPressed())
+      MenuBase::OnOpen();
 }
 
-
-void Menu::AddTabToListIfNotInListNew(Function fn, int32_t xPos, int32_t yPos)
-{
-   // search for tab function
-   auto searchTab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tab)
-      {
-         return tab.tabFn == fn;
-      });
-
-   // if not found then add it to the map
-   if (searchTab == m_TabList.end())
-      m_TabList.push_back(TabComponent(fn, true, xPos, yPos));
-}
-
-void Menu::OnOpen()
-{
-   if (m_FirstTimeOpen)
-   {
-      if (m_OnFirstTimeOpen)
-         m_OnFirstTimeOpen();
-
-      AddTabToListIfNotInListNew(m_FirstTab, 90, 3);
-      AddTabToListIfNotInListNew(m_SecondTab, 161, 3);
-      AddTabToListIfNotInListNew(m_ThirdTab, 234, 3);
-      AddTabToListIfNotInListNew(m_FourthTab, 329, 3);
-
-      m_FirstTimeOpen = false;
-   }
-
-   m_Opened = true;
-
-   // Tabs
-   m_MainMenuCurrentTab = (m_MainMenuSavedCurrentTab == 0) ? 1 : m_MainMenuSavedCurrentTab;
-
-   m_ActiveTab = m_MainMenu;
-
-   // Tab Options
-   GetTabComponent(m_ActiveTab).CurrentOption = (GetTabComponent(m_ActiveTab).SavedCurrentOption == 0) ? 1 : GetTabComponent(m_ActiveTab).SavedCurrentOption;
-
-   PlayUISoundSelect();
-}
-
-void Menu::OnClose()
-{
-   m_Opened = false;
-
-   // Tabs
-   m_MainMenuSavedCurrentTab = m_MainMenuCurrentTab;
-
-   // Tab Options
-   GetTabComponent(m_ActiveTab).SavedCurrentOption = GetTabComponent(m_ActiveTab).CurrentOption;
-
-   PlayUISoundBack();
-}
-
-void Menu::OnScrollUp()
-{
-   // Tabs
-   m_MainMenuCurrentTab--;
-   if (m_MainMenuCurrentTab < 1)
-      m_MainMenuCurrentTab = m_MainMenuTotalTabs;
-
-   // Tab Options
-   GetTabComponent(m_ActiveTab).CurrentOption--;
-   if (GetTabComponent(m_ActiveTab).CurrentOption < 1)
-      GetTabComponent(m_ActiveTab).CurrentOption = GetTabComponent(m_ActiveTab).TotalOptions;
-
-   PlayUISoundScroll();
-}
-
-void Menu::OnScrollDown()
-{
-   // Tabs
-   m_MainMenuCurrentTab++;
-   if (m_MainMenuCurrentTab > m_MainMenuTotalTabs)
-      m_MainMenuCurrentTab = 1;
-
-   // Tab Options
-   GetTabComponent(m_ActiveTab).CurrentOption++;
-   if (GetTabComponent(m_ActiveTab).CurrentOption > GetTabComponent(m_ActiveTab).TotalOptions)
-      GetTabComponent(m_ActiveTab).CurrentOption = 1;
-
-   PlayUISoundScroll();
-}
-
-void Menu::OnTabLeft()
-{
-
-   PlayUISoundSelect();
-}
-
-void Menu::OnTabRight()
-{
-
-   PlayUISoundSelect();
-}
-
-bool Menu::tabPressed()
-{
-   if (tabHovered())
-   {
-      return IsEnterPressed();
-   }
-   return false;
-}
-
-void Menu::AddTabToListIfNotInList(const TabComponent& comp)
-{
-   // search for tab function
-   auto searchTab = std::find_if(m_TabList.begin(), m_TabList.end(), [comp](const TabComponent& tab)
-   {
-      return tab.tabFn == comp.tabFn;
-   });
-
-   // if not found then add it to the map
-   if (searchTab == m_TabList.end())
-      m_TabList.push_back(comp);
-}
-
-bool Menu::tabHovered()
-{
-   return m_MainMenuCurrentTab == m_MainMenuPrintingTab;
-}
-
-void Menu::title(const std::wstring& text)
-{
-   DrawShadowText(text, m_MainMenuPosX, m_MainMenuBaseY + (m_MainMenuTitleHeight / 2), m_MainMenuTitleTextColor, false);
-   m_MainMenuBaseY += m_MainMenuTitleHeight;
-}
-
-Menu& Menu::tabmenu(const std::wstring& text)
-{
-   m_MainMenuPrintingTab++;
-   DrawTabOptions(text);
-   return *this;
-}
-
-Menu& Menu::toggleTab(const TabComponent& comp)
-{
-   DrawTabToggle(comp.isRunning);
-
-   if (tabPressed())
-   {
-      //AddTabToListIfNotInList(comp);
-
-      // search for tab function and if found activate the tab
-      auto currentTab = std::find_if(m_TabList.begin(), m_TabList.end(), [comp](const TabComponent& tab)
-      {
-         return tab.tabFn == comp.tabFn;
-      });
-
-      if (currentTab != m_TabList.end())
-         (*currentTab).isRunning ^= 1;
-   }
-
-   if (tabHovered() && comp.isRunning && ButtonPressed(BUTTON_L3))
-      m_CanEditTabPlacement ^= 1;
-
-   return *this;
-}
-
-Menu::TabComponent& Menu::GetTabComponent(Function fn)
-{
-   // search for tab function
-   auto tab = std::find_if(m_TabList.begin(), m_TabList.end(), [&fn](const TabComponent& tabComp)
-   {
-      return tabComp.tabFn == fn;
-   });
-
-   if (tab != m_TabList.end())
-      return *tab;
-
-   static TabComponent tabComponent(nullptr, false);
-   return tabComponent;
-}
-
-void Menu::DrawTabOptions(const std::wstring& text)
-{
-   size_t haultIndex = 0;
-   if ((m_MainMenuCurrentTab < m_MainMenuTabStartInfiniteScroll && m_MainMenuPrintingTab <= m_MainMenuTabOptionsPerPage) || m_MainMenuTotalTabs <= m_MainMenuTabOptionsPerPage)
-   {
-      haultIndex = m_MainMenuPrintingTab;
-   }
-   else
-   {
-      if (m_MainMenuCurrentTab >= m_MainMenuTabStartInfiniteScroll)
-      {
-         if (m_MainMenuCurrentTab > (m_MainMenuTotalTabs - m_MainMenuTabEndInfiniteScroll))
-         {
-            haultIndex = m_MainMenuTabStartInfiniteScroll + (m_MainMenuTabEndInfiniteScroll - (m_MainMenuTotalTabs - m_MainMenuPrintingTab));
-         }
-         else
-         {
-            haultIndex = m_MainMenuTabStartInfiniteScroll + (m_MainMenuPrintingTab - m_MainMenuCurrentTab);
-         }
-      }
-   }
-   if (haultIndex > m_MainMenuTabOptionsPerPage || haultIndex <= 0)
-      return;
-
-   DrawRect(
-      m_MainMenuPosX,
-      m_MainMenuBaseY + (m_MainMenuOptionHeight / 2),
-      70,
-      170,
-      m_MainMenuTabBackgroundColor);
-
-   DrawText(text,
-      m_MainMenuPosX,
-      m_MainMenuBaseY + (m_MainMenuOptionHeight / 2),
-      tabHovered() ? m_MainMenuTabTextColorHighlighted : m_MainMenuTabTextColor);
-
-   m_MainMenuBaseY += m_MainMenuOptionHeight;
-}
-
-void Menu::DrawTabToggle(bool var)
-{
-   //float yPosAtOption = m_MainMenuBaseY - m_MainMenuOptionHeight;
-}
-
-void Menu::Tick()
-{
-   UpdateUI();
-}
-
-void Menu::UpdateUI()
+void MenuBase::Tick()
 {
    if (m_Opened)
    {
@@ -445,4 +186,146 @@ void Menu::UpdateUI()
    {
       WhileClosed();
    }
+}
+
+
+
+
+
+
+MenuTab::MenuTab(Function mainmenu, Function firstTab, Function secondTab, Function thirdTab, Function fourthTab) 
+   : MenuBase(), m_MainMenu(mainmenu), m_FirstTab(firstTab), m_SecondTab(secondTab), m_ThirdTab(thirdTab), m_FourthTab(fourthTab)
+{
+
+}
+
+MenuTab::~MenuTab()
+{
+
+}
+
+void MenuTab::OnGameTick()
+{
+   MenuBase::OnGameTick();
+}
+
+void MenuTab::UpdateGUI()
+{
+   m_TotalOption = m_PrintingOption;
+   m_PrintingOption = 0;
+   m_BaseY = m_PosY;
+   m_MainMenu();
+}
+
+void MenuTab::OnOpen()
+{
+   MenuBase::OnOpen();
+
+   m_CurrentOption = 1;
+}
+
+void MenuTab::OnClose()
+{
+
+}
+
+void MenuTab::OnScrollUp()
+{
+   m_CurrentOption--;
+   if (m_CurrentOption < 1)
+      m_CurrentOption = m_TotalOption;
+}
+
+void MenuTab::OnScrollDown()
+{
+   m_CurrentOption++;
+   if (m_CurrentOption > m_TotalOption)
+      m_CurrentOption = 1;
+}
+
+void MenuTab::OnTabPrevious()
+{
+
+}
+
+void MenuTab::OnTabNext()
+{
+
+}
+
+bool MenuTab::hovered()
+{
+   return m_CurrentOption == m_PrintingOption;
+}
+
+bool MenuTab::pressed()
+{
+   if (hovered())
+   {
+      return IsEnterPressed();
+   }
+   return false;
+}
+
+void MenuTab::title(const std::wstring& text)
+{
+   DrawShadowText(text, m_PosX, m_BaseY + (m_TitleHeight / 2), m_TitleTextColor, false);
+   m_BaseY += m_OptionHeight;
+}
+
+MenuTab& MenuTab::option(const std::wstring& text)
+{
+   m_PrintingOption++;
+   DrawTabOptions(text);
+   return *this;
+}
+
+MenuTab& MenuTab::toggle(bool var)
+{
+   return *this;
+}
+
+void MenuTab::DrawTabOptions(const std::wstring& text)
+{
+   size_t haultIndex = 0;
+   if ((m_CurrentOption < m_StartInfiniteScroll && m_PrintingOption <= m_OptionsPerPage) || m_TotalOption <= m_OptionsPerPage)
+   {
+      haultIndex = m_PrintingOption;
+   }
+   else
+   {
+      if (m_CurrentOption >= m_StartInfiniteScroll)
+      {
+         if (m_CurrentOption > (m_TotalOption - m_EndInfiniteScroll))
+         {
+            haultIndex = m_StartInfiniteScroll + (m_EndInfiniteScroll - (m_TotalOption - m_PrintingOption));
+         }
+         else
+         {
+            haultIndex = m_StartInfiniteScroll + (m_PrintingOption - m_CurrentOption);
+         }
+      }
+   }
+   if (haultIndex > m_OptionsPerPage || haultIndex <= 0)
+      return;
+
+   DrawRect(
+      m_PosX,
+      m_BaseY + (m_OptionHeight / 2),
+      70,
+      170,
+      m_OptionBackgroundColor);
+
+   DrawText(text,
+      m_PosX,
+      m_BaseY + (m_OptionHeight / 2),
+      hovered() ? m_OptionTextColorHighlighted : m_OptionTextColor);
+
+   m_BaseY += m_OptionHeight;
+}
+
+// Required due to pure virtualness
+extern "C" void __cxa_pure_virtual()
+{
+   while (true) {}
 }
