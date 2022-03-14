@@ -6,6 +6,7 @@
 #include <cell/pad.h>
 #include "Util/NewDeleteOverride.hpp"
 #include "Util/TimeHelpers.hpp"
+#include "Util/SystemCalls.hpp"
 #include "Game.hpp"
 #include "Hooking.hpp"
 #include "Menu.hpp"
@@ -15,7 +16,9 @@ SYS_MODULE_INFO(Minecraft, 0, 1, 1);
 SYS_MODULE_START(Minecraft_Main);
 SYS_MODULE_STOP(Minecraft_Stop);
 
-sys_ppu_thread_t gMinecraftThreadId = SYS_PPU_THREAD_ID_INVALID;
+sys_ppu_thread_t gMinecraftPpuThread = SYS_PPU_THREAD_ID_INVALID;
+sys_ppu_thread_t gFailSafePpuThread = SYS_PPU_THREAD_ID_INVALID;
+bool gFalilSafeRunning = true;
 
 
 /***
@@ -28,11 +31,10 @@ sys_ppu_thread_t gMinecraftThreadId = SYS_PPU_THREAD_ID_INVALID;
 * 
 */ 
 
-
 CDECL_BEGIN
 int Minecraft_Main(int argc, char* argv[])
 {
-   sys_ppu_thread_create(&gMinecraftThreadId, [](uint64_t arg)
+   sys_ppu_thread_create(&gMinecraftPpuThread, [](uint64_t arg)
    {
 #if NDEBUG
       sleep_for(10000);
@@ -40,51 +42,60 @@ int Minecraft_Main(int argc, char* argv[])
 
       g_GameVariables = new GameVariables();
       g_Helpers = Helpers();
-      g_Menu = Menu(MainMenu, CombatTab, MovementTab, PlayerTab, ItemTab);
-
-      HookingInitiate();
-
-      g_Menu.RegisterOnMain([]
+      g_MenuTab = MenuTab(MainMenu, CombatTab, MovementTab, PlayerTab, ItemTab);
+      g_MenuTab.RegisterOnMain([]
       {
-         
 
          printf("welcome to minecraft sprx mod menu\n");
       });
 
-
-      // everything under here is bad and must be changed. it adds a submenu here and in Menu::OnOpen() so there are 2 instances of the submenu. BADDDd
-      g_CombatTab = Menu::TabComponent(CombatTab, false);
-      g_MovmentTab = Menu::TabComponent(MovementTab, false);
-      g_PlayerTab = Menu::TabComponent(PlayerTab, false);
-      g_VisualTab = Menu::TabComponent(VisualTab, false);
-      g_WorldTab = Menu::TabComponent(WorldTab, false);
-      g_ItemTab = Menu::TabComponent(ItemTab, false);
-      g_EnchantmentTab = Menu::TabComponent(EnchantmentTab, false);
-      g_HostTab = Menu::TabComponent(HostTab, false);
-      g_DebugTab = Menu::TabComponent(DebugTab, false);
-
-
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(CombatTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(MovementTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(PlayerTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(VisualTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(WorldTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(ItemTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(EnchantmentTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(HostTab, false));
-      g_Menu.AddTabToListIfNotInList(Menu::TabComponent(DebugTab, false));
+      HookingInitiate();
 
       sys_ppu_thread_exit(0);
 
    }, 0, 3000, 8192, SYS_PPU_THREAD_CREATE_JOINABLE, "Minecraft");
+
+
+   sys_ppu_thread_create(&gFailSafePpuThread, [](uint64_t arg)
+   {
+      while (gFalilSafeRunning)
+      {
+         auto UpdateExitProcessOnException = []() -> void
+         {
+            CellPadData padData{};
+            if (cellPadGetData(0, &padData) != CELL_PAD_OK)
+               return;
+
+            if (padData.len == 0)
+               return;
+
+            if ((padData.button[CELL_PAD_BTN_OFFSET_DIGITAL1] & CELL_PAD_CTRL_SELECT)
+               && (padData.button[CELL_PAD_BTN_OFFSET_DIGITAL1] & CELL_PAD_CTRL_START))
+               do_umount();
+         };
+
+         UpdateExitProcessOnException();
+
+         sleep_for(1000);
+      }
+
+      sys_ppu_thread_exit(0);
+
+   }, 0, 0x50, 0x8000, SYS_PPU_THREAD_CREATE_JOINABLE, "FailSafeThread");
 
    return 0;
 }
 
 int Minecraft_Stop(int argc, char* argv[])
 {
+   gFalilSafeRunning = false;
+
    uint64_t retVal;
-   sys_ppu_thread_join(gMinecraftThreadId, &retVal);
+   sys_ppu_thread_join(gMinecraftPpuThread, &retVal);
+
+   uint64_t retVal2;
+   sys_ppu_thread_join(gFailSafePpuThread, &retVal2);
+
    HookingRemoveAll();
    delete g_GameVariables;
 
