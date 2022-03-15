@@ -59,14 +59,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
     <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories>$(SN_PS3_PATH)\ppu\include\sn;$(SCE_PS3_ROOT)\target\ppu\include;$(SCE_PS3_ROOT)\target\common\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStd>Cpp11</CppLanguageStd>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
@@ -86,7 +86,7 @@
       <Branchless>Branchless2</Branchless>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lsysutil_np_stub;-lnet_stub;-lnetctl_stub;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsyscall.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha256.a;$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
@@ -101,11 +101,12 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Hooking.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_gcm.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_playstation3.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_psgl.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\backends\imgui_impl_playstation3.cpp" />
-    <ClCompile Include="ImGui\backends\imgui_impl_psgl.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -880,10 +881,11 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Hooking.hpp" />
-    <ClInclude Include="ImGui\imconfig.h" />
-    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_gcm.h" />
     <ClInclude Include="ImGui\backends\imgui_impl_playstation3.h" />
     <ClInclude Include="ImGui\backends\imgui_impl_psgl.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_internal.h" />
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
