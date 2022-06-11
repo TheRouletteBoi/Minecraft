@@ -24,9 +24,12 @@ bool gFalilSafeRunning = true;
 /***
 * 
 * https://www.youtube.com/watch?v=68SP6vfPw7I MCPE Master
+* https://research.ncl.ac.uk/game/mastersdegree/workshops/ps3introductiontogcm/tutorial6.pdf GCMRenderer::SwapBuffers
+* https://docplayer.net/54726301-Tutorial-4-introduction-to-gcm-and-ps3-graphics.html Finished Drawing Swap buffers
 * Menu
 * have 4 tabs opened by default
 * if hovering over a tab and R3 is pressed you can move/dock the menu anywhere on screen using R3 or L3
+* DEBUG -> in debug mode assert receives a linker error in "imgui.h" macro IM_ASSERT
 * 
 * 
 */ 

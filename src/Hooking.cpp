@@ -17,6 +17,9 @@ DetourHook* player_HurtHk;
 DetourHook* livingEntity_actuallyHurtHk;
 DetourHook* player_actuallyHurtHk;
 DetourHook* multiPlayerGameMode_destroyBlockHk;
+DetourHook* renderer_PresentHk;
+DetourHook* waitFlipHk;
+ImportExportHook* cellGcmSetFlipCommandHk;
 
 uint32_t MultiPlayerGameMode_useItemOnHook(MultiPlayerGameMode* gameMode, MultiplayerLocalPlayer** player, MultiPlayerLevel* level,
    BlockPos* blockPos, Direction* direction, Vec3* pos, uint32_t interactionHand, bool unk1, bool* unk2)
@@ -162,6 +165,48 @@ void MultiPlayerGameMode_destroyBlockHook(MultiPlayerGameMode* gamemode, BlockPo
    multiPlayerGameMode_destroyBlockHk->GetOriginal<void>(gamemode, blockPos);
 }
 
+void BeginFrame()
+{
+   //g_GameVariables->GameRenderer_setupGuiScreen(pUnk, -1);
+}
+
+void OnOpenGlTick()
+{
+   DrawRect(
+      10,
+      10 + (10 / 2),
+      70,
+      170,
+      Color(128, 128, 128, 100));
+}
+
+void EndFrame()
+{
+   //g_GameVariables->GlStateManager_clear(pRenderer, 0, 1);
+}
+
+void Renderer_PresentHook(void* renderer)
+{
+   //BeginFrame();
+   //OnOpenGlTick();
+   //EndFrame();
+
+   renderer_PresentHk->GetOriginal<void>(renderer);
+}
+
+void WaitFlipHook()
+{
+
+   waitFlipHk->GetOriginal<void>();
+}
+
+int32_t cellGcmSetFlipCommandHook(CellGcmContextData* thisContext, uint8_t id)
+{
+
+
+   return cellGcmSetFlipCommandHk->GetOriginal<int32_t>(thisContext, id);
+}
+
 
 DetourHook* Player_normalTickHk;
 DetourHook* Entity_IsInWaterHk;
@@ -262,67 +307,85 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
 void HookingInitiate()
 {
    multiPlayerGameMode_useItemOnHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
+      *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
       (uintptr_t)MultiPlayerGameMode_useItemOnHook);
 
    multiPlayerGameMode_tickHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_tick),
+      *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_tick),
       (uintptr_t)MultiPlayerGameMode_tickHook);
 
    multiPlayerLevel_setLevelHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerLevel_setLevel),
+      *(uintptr_t*)(g_GameVariables->MultiPlayerLevel_setLevel),
       (uintptr_t)MultiPlayerLevel_setLevelHook);
 
-   // using false because this function only has 4 instructions. Preserve registers takes 6 instructions so settings it to false will default back to 4 instructions 
    multiPlayerGameMode_initPlayerHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_initPlayer),
-      (uintptr_t)MultiPlayerGameMode_initPlayerHook, false);
+      *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_initPlayer),
+      (uintptr_t)MultiPlayerGameMode_initPlayerHook);
 
    minecraft_runMiddleHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->Minecraft_runMiddle),
+      *(uintptr_t*)(g_GameVariables->Minecraft_runMiddle),
       (uintptr_t)Minecraft_runMiddleHook);
 
    multiPlayerGameMode_attackHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_attack),
+      *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_attack),
       (uintptr_t)MultiPlayerGameMode_attackHook);
 
    gameRenderer_setupGuiScreenHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->GameRenderer_setupGuiScreen),
+      *(uintptr_t*)(g_GameVariables->GameRenderer_setupGuiScreen),
       (uintptr_t)GameRenderer_setupGuiScreenHook);
 
    gui_renderHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->Gui_render),
+      *(uintptr_t*)(g_GameVariables->Gui_render),
       (uintptr_t)Gui_renderHook);
 
-   sceNpBasicSetPresenceDetails2Hk = new ImportExportHook(ImportExportHook::Import, "sceNp", 0x5E849303, (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
+   sceNpBasicSetPresenceDetails2Hk = new ImportExportHook(
+      ImportExportHook::Import,
+      "sceNp",
+      0x5E849303,
+      (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
 
    livingEntity_onChangedBlockHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->LivingEntity_onChangedBlock),
+      *(uintptr_t*)(g_GameVariables->LivingEntity_onChangedBlock),
       (uintptr_t)LivingEntity_onChangedBlockHook);
 
    //livingEntity_getJumpPowerHk = new DetourHook(
-   //   *(uint32_t*)(g_GameVariables->LivingEntity_getJumpPower),
-   //   (uintptr_t)LivingEntity_getJumpPowerHook, false);
+   //   *(uintptr_t*)(g_GameVariables->LivingEntity_getJumpPower),
+   //   (uintptr_t)LivingEntity_getJumpPowerHook);
 
    gameRenderer_GetFovHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->GameRenderer_GetFov),
+      *(uintptr_t*)(g_GameVariables->GameRenderer_GetFov),
       (uintptr_t)GameRenderer_GetFovHook);
 
    player_HurtHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->Player_Hurt),
+      *(uintptr_t*)(g_GameVariables->Player_Hurt),
       (uintptr_t)Player_HurtHook);
 
    livingEntity_actuallyHurtHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->LivingEntity_actuallyHurt),
+      *(uintptr_t*)(g_GameVariables->LivingEntity_actuallyHurt),
       (uintptr_t)LivingEntity_actuallyHurtHook);
 
    player_actuallyHurtHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->Player_actuallyHurt),
+      *(uintptr_t*)(g_GameVariables->Player_actuallyHurt),
       (uintptr_t)Player_actuallyHurtHook);
 
    multiPlayerGameMode_destroyBlockHk = new DetourHook(
-      *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
+      *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
       (uintptr_t)MultiPlayerGameMode_destroyBlockHook);
+
+   renderer_PresentHk = new DetourHook(
+      *(uintptr_t*)(g_GameVariables->Renderer_Present),
+      (uintptr_t)Renderer_PresentHook);
+
+   waitFlipHk = new DetourHook(
+      *(uintptr_t*)(g_GameVariables->WaitFlip),
+      (uintptr_t)WaitFlipHook);
+
+   // Swap buffers?? Universal for all games
+   cellGcmSetFlipCommandHk = new ImportExportHook(
+      ImportExportHook::Import,
+      "cellGcmSys",
+      0x21397818,
+      (uintptr_t)cellGcmSetFlipCommandHook);
 }
 
 void HookingRemoveAll()
@@ -343,4 +406,7 @@ void HookingRemoveAll()
    delete livingEntity_actuallyHurtHk;
    delete player_actuallyHurtHk;
    delete multiPlayerGameMode_destroyBlockHk;
+   delete renderer_PresentHk;
+   delete waitFlipHk;
+   delete cellGcmSetFlipCommandHk;
 }
