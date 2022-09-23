@@ -259,7 +259,7 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
    return sceNpBasicSetPresenceDetails2Hk->GetOriginal<uint32_t>(pres, options);
 }
 
-void HookingInitiate()
+void InstallHooks()
 {
    multiPlayerGameMode_useItemOnHk = new DetourHook(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
@@ -325,7 +325,7 @@ void HookingInitiate()
       (uintptr_t)MultiPlayerGameMode_destroyBlockHook);
 }
 
-void HookingRemoveAll()
+void RemoveHooks()
 {
    delete multiPlayerGameMode_useItemOnHk;
    delete multiPlayerGameMode_tickHk;

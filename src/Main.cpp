@@ -27,6 +27,8 @@ bool gFalilSafeRunning = true;
 * Menu
 * have 4 tabs opened by default
 * if hovering over a tab and R3 is pressed you can move/dock the menu anywhere on screen using R3 or L3
+* Move adding submenus to "onFirst time open" that way we can set position and color for the main and other 3 submenus and when a new submenus is chosen just set position to center of screen or under 3 submenus
+* Move MainMenu into tab components
 * 
 * 
 */ 
@@ -49,7 +51,7 @@ int Minecraft_Main(int argc, char* argv[])
          printf("welcome to minecraft sprx mod menu\n");
       });
 
-      HookingInitiate();
+      InstallHooks();
 
       sys_ppu_thread_exit(0);
 
@@ -96,7 +98,7 @@ int Minecraft_Stop(int argc, char* argv[])
    uint64_t retVal2;
    sys_ppu_thread_join(gFailSafePpuThread, &retVal2);
 
-   HookingRemoveAll();
+   RemoveHooks();
    delete g_GameVariables;
 
    return 0;

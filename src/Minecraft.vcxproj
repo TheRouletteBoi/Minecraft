@@ -102,7 +102,7 @@
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Hooking.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Memory\DetourHook.cpp" />
+    <ClCompile Include="Memory\Detour.cpp" />
     <ClCompile Include="Memory\Pattern.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Submenus.cpp" />
@@ -873,7 +873,7 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="Hooking.hpp" />
-    <ClInclude Include="Memory\DetourHook.hpp" />
+    <ClInclude Include="Memory\Detour.hpp" />
     <ClInclude Include="Memory\Pattern.hpp" />
     <ClInclude Include="Menu.hpp" />
     <ClInclude Include="Submenus.hpp" />

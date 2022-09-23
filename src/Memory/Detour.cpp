@@ -1,4 +1,4 @@
-#include "DetourHook.hpp"
+#include "Detour.hpp"
 
 #define ADDRESS_HIGHER(X) ( ( X >> 16 ) & 0xFFFF )
 #define ADDRESS_LOWER(X)  ( X & 0xFFFF )
