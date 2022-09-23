@@ -1,22 +1,22 @@
 #include "Hooking.hpp"
 
 
-DetourHook* multiPlayerGameMode_useItemOnHk;
-DetourHook* multiPlayerGameMode_tickHk;
-DetourHook* multiPlayerLevel_setLevelHk;
-DetourHook* multiPlayerGameMode_initPlayerHk;
-DetourHook* minecraft_runMiddleHk;
-DetourHook* multiPlayerGameMode_attackHk;
-DetourHook* gameRenderer_setupGuiScreenHk;
-DetourHook* gui_renderHk;
-ImportExportHook* sceNpBasicSetPresenceDetails2Hk;
-DetourHook* livingEntity_onChangedBlockHk;
-DetourHook* livingEntity_getJumpPowerHk;
-DetourHook* gameRenderer_GetFovHk;
-DetourHook* player_HurtHk;
-DetourHook* livingEntity_actuallyHurtHk;
-DetourHook* player_actuallyHurtHk;
-DetourHook* multiPlayerGameMode_destroyBlockHk;
+Detour* multiPlayerGameMode_useItemOnHk;
+Detour* multiPlayerGameMode_tickHk;
+Detour* multiPlayerLevel_setLevelHk;
+Detour* multiPlayerGameMode_initPlayerHk;
+Detour* minecraft_runMiddleHk;
+Detour* multiPlayerGameMode_attackHk;
+Detour* gameRenderer_setupGuiScreenHk;
+Detour* gui_renderHk;
+ImportExportDetour* sceNpBasicSetPresenceDetails2Hk;
+Detour* livingEntity_onChangedBlockHk;
+Detour* livingEntity_getJumpPowerHk;
+Detour* gameRenderer_GetFovHk;
+Detour* player_HurtHk;
+Detour* livingEntity_actuallyHurtHk;
+Detour* player_actuallyHurtHk;
+Detour* multiPlayerGameMode_destroyBlockHk;
 
 uint32_t MultiPlayerGameMode_useItemOnHook(MultiPlayerGameMode* gameMode, MultiplayerLocalPlayer** player, MultiPlayerLevel* level,
    BlockPos* blockPos, Direction* direction, Vec3* pos, uint32_t interactionHand, bool unk1, bool* unk2)
@@ -163,11 +163,11 @@ void MultiPlayerGameMode_destroyBlockHook(MultiPlayerGameMode* gamemode, BlockPo
 }
 
 
-DetourHook* Player_normalTickHk;
-DetourHook* Entity_IsInWaterHk;
-DetourHook* Entity_IsInWaterOrRainHk;
-DetourHook* Entity_IsUnderLiquidHk;
-DetourHook* Items_WeaponItem_GetDestroySpeedHk;
+Detour* Player_normalTickHk;
+Detour* Entity_IsInWaterHk;
+Detour* Entity_IsInWaterOrRainHk;
+Detour* Entity_IsUnderLiquidHk;
+Detour* Items_WeaponItem_GetDestroySpeedHk;
 
 float kSpeed = 90.0f;
 void* playerRef = nullptr;
@@ -261,66 +261,65 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
 
 void InstallHooks()
 {
-   multiPlayerGameMode_useItemOnHk = new DetourHook(
+   multiPlayerGameMode_useItemOnHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
       (uintptr_t)MultiPlayerGameMode_useItemOnHook);
 
-   multiPlayerGameMode_tickHk = new DetourHook(
+   multiPlayerGameMode_tickHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_tick),
       (uintptr_t)MultiPlayerGameMode_tickHook);
 
-   multiPlayerLevel_setLevelHk = new DetourHook(
+   multiPlayerLevel_setLevelHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerLevel_setLevel),
       (uintptr_t)MultiPlayerLevel_setLevelHook);
 
-   // using false because this function only has 4 instructions. Preserve registers takes 6 instructions so settings it to false will default back to 4 instructions 
-   multiPlayerGameMode_initPlayerHk = new DetourHook(
+   multiPlayerGameMode_initPlayerHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_initPlayer),
-      (uintptr_t)MultiPlayerGameMode_initPlayerHook, false);
+      (uintptr_t)MultiPlayerGameMode_initPlayerHook);
 
-   minecraft_runMiddleHk = new DetourHook(
+   minecraft_runMiddleHk = new Detour(
       *(uint32_t*)(g_GameVariables->Minecraft_runMiddle),
       (uintptr_t)Minecraft_runMiddleHook);
 
-   multiPlayerGameMode_attackHk = new DetourHook(
+   multiPlayerGameMode_attackHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_attack),
       (uintptr_t)MultiPlayerGameMode_attackHook);
 
-   gameRenderer_setupGuiScreenHk = new DetourHook(
+   gameRenderer_setupGuiScreenHk = new Detour(
       *(uint32_t*)(g_GameVariables->GameRenderer_setupGuiScreen),
       (uintptr_t)GameRenderer_setupGuiScreenHook);
 
-   gui_renderHk = new DetourHook(
+   gui_renderHk = new Detour(
       *(uint32_t*)(g_GameVariables->Gui_render),
       (uintptr_t)Gui_renderHook);
 
-   sceNpBasicSetPresenceDetails2Hk = new ImportExportHook(ImportExportHook::Import, "sceNp", 0x5E849303, (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
+   sceNpBasicSetPresenceDetails2Hk = new ImportExportDetour(ImportExportDetour::Import, "sceNp", 0x5E849303, (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
 
-   livingEntity_onChangedBlockHk = new DetourHook(
+   livingEntity_onChangedBlockHk = new Detour(
       *(uint32_t*)(g_GameVariables->LivingEntity_onChangedBlock),
       (uintptr_t)LivingEntity_onChangedBlockHook);
 
-   //livingEntity_getJumpPowerHk = new DetourHook(
+   //livingEntity_getJumpPowerHk = new Detour(
    //   *(uint32_t*)(g_GameVariables->LivingEntity_getJumpPower),
    //   (uintptr_t)LivingEntity_getJumpPowerHook, false);
 
-   gameRenderer_GetFovHk = new DetourHook(
+   gameRenderer_GetFovHk = new Detour(
       *(uint32_t*)(g_GameVariables->GameRenderer_GetFov),
       (uintptr_t)GameRenderer_GetFovHook);
 
-   player_HurtHk = new DetourHook(
+   player_HurtHk = new Detour(
       *(uint32_t*)(g_GameVariables->Player_Hurt),
       (uintptr_t)Player_HurtHook);
 
-   livingEntity_actuallyHurtHk = new DetourHook(
+   livingEntity_actuallyHurtHk = new Detour(
       *(uint32_t*)(g_GameVariables->LivingEntity_actuallyHurt),
       (uintptr_t)LivingEntity_actuallyHurtHook);
 
-   player_actuallyHurtHk = new DetourHook(
+   player_actuallyHurtHk = new Detour(
       *(uint32_t*)(g_GameVariables->Player_actuallyHurt),
       (uintptr_t)Player_actuallyHurtHook);
 
-   multiPlayerGameMode_destroyBlockHk = new DetourHook(
+   multiPlayerGameMode_destroyBlockHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
       (uintptr_t)MultiPlayerGameMode_destroyBlockHook);
 }
