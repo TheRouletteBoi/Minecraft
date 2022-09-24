@@ -266,6 +266,122 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
     return sceNpBasicSetPresenceDetails2Hk->GetOriginal<uint32_t>(pres, options);
 }
 
+#define CELL_GCMUTIL_ATTR_POSITION		(CG_ATTR0 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_BLENDWEIGHT	(CG_ATTR1 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_NORMAL		(CG_ATTR2 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_COLOR			(CG_ATTR3 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_COLOR0		(CG_ATTR3 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_DIFFUSE		(CG_ATTR3 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_COLOR1		(CG_ATTR4 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_SPECULAR		(CG_ATTR4 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_FOGCOORD		(CG_ATTR5 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_TESSFACTOR	(CG_ATTR5 - CG_ATTR0) 
+#define CELL_GCMUTIL_ATTR_PSIZE			(CG_ATTR6  - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_BLENDINDICES	(CG_ATTR7  - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD0		(CG_ATTR8  - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD1		(CG_ATTR9  - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD2		(CG_ATTR10 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD3		(CG_ATTR11 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD4		(CG_ATTR12 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD5		(CG_ATTR13 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD6		(CG_ATTR14 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TANGENT		(CG_ATTR14 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_TEXCOORD7		(CG_ATTR15 - CG_ATTR0)
+#define CELL_GCMUTIL_ATTR_BINORMAL		(CG_ATTR15 - CG_ATTR0)
+
+union PackedUnitVec
+{
+    unsigned int packed;
+    char array[4];
+};
+
+struct vec4_t
+{
+    union
+    {
+        float v[4];
+        struct { float x, y, z, w; };
+        struct { float r, g, b, a; };
+    };
+
+    vec4_t()
+    {
+        this->x = this->y = this->z = this->w = 0;
+    }
+
+    vec4_t(float x, float y, float z, float w)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+        this->w = w;
+    }
+
+    vec4_t(float vec[4])
+    {
+        if (vec != 0)
+        {
+            this->x = vec[0];
+            this->y = vec[1];
+            this->z = vec[2];
+            this->w = vec[3];
+        }
+        else
+        {
+            this->x = this->y = this->z = this->w = 0;
+        }
+    }
+};
+
+struct vec2_t
+{
+    float x, y;
+};
+
+void RB_GCMDrawQuad(cell::Gcm::Inline::CellGcmContext* gcmContext, float x, float y, float z, float width, float height, float* color)
+{
+    // setup vertex attribute
+    struct GfxVertexFUCK
+    {
+        vec4_t xyzw;
+        vec4_t color;
+        vec2_t texCoord;
+        PackedUnitVec normal;
+    };
+
+    GfxVertexFUCK vertex[4] = {
+        { { x + width, y, 0.f, 1.0f }, color, { 0.f, 0.0f }, { 2143289344 } },
+        { { x, y, 0.f, 1.0f, }, color, { 0.f, 1.0f }, { 2143289344 } },
+        { { x, y + height, 0.f, 1.0f }, color, { 1.f, 1.0f }, { 2143289344 } },
+        { { x + width, y + height, 0.f, 1.0f }, color, { 0.0f, 1.0f }, { 2143289344 } }
+    };
+
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+
+    // draw
+    gcmContext->SetDrawInlineArray(CELL_GCM_PRIMITIVE_POLYGON, 4 * sizeof(GfxVertexFUCK) / sizeof(float), vertex);
+
+    // invalidate vertex attribute
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+}
+
+void TestGcmRendering()
+{
+    cell::Gcm::Inline::CellGcmContext* gcmContext = nullptr;
+
+    if (!gcmContext)
+        return;
+
+    float color[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
+    RB_GCMDrawQuad(gcmContext, 400, 400, 0.f, 500, 500, color);
+}
+
 void Renderer_PresentHook(void* renderer)
 {
     //BeginFrame();
@@ -283,7 +399,6 @@ void WaitFlipHook()
 
 int32_t cellGcmSetFlipCommandHook(CellGcmContextData* thisContext, uint8_t id)
 {
-
 
     return cellGcmSetFlipCommandHk->GetOriginal<int32_t>(thisContext, id);
 }
