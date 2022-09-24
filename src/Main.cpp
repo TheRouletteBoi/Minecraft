@@ -30,6 +30,11 @@ bool gFalilSafeRunning = true;
 * DEBUG MODE. In debug mode assert receives a linker error in "imgui.h" macro IM_ASSERT
 * Move adding submenus to "onFirst time open" that way we can set position and color for the main and other 3 submenus and when a new submenus is chosen just set position to center of screen or under 3 submenus
 * Move MainMenu into tab components
+* check for proper cursor handling @ C:\usr\local\cell\samples\sdk\graphics\gcm\cursor
+* 
+* 
+* 
+* 
 * 
 * 
 */ 
