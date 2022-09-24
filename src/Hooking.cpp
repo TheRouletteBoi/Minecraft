@@ -17,6 +17,9 @@ Detour* player_HurtHk;
 Detour* livingEntity_actuallyHurtHk;
 Detour* player_actuallyHurtHk;
 Detour* multiPlayerGameMode_destroyBlockHk;
+Detour* renderer_PresentHk;
+Detour* waitFlipHk;
+ImportExportDetour* cellGcmSetFlipCommandHk;
 
 uint32_t MultiPlayerGameMode_useItemOnHook(MultiPlayerGameMode* gameMode, MultiplayerLocalPlayer** player, MultiPlayerLevel* level,
    BlockPos* blockPos, Direction* direction, Vec3* pos, uint32_t interactionHand, bool unk1, bool* unk2)
@@ -259,6 +262,28 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
    return sceNpBasicSetPresenceDetails2Hk->GetOriginal<uint32_t>(pres, options);
 }
 
+void Renderer_PresentHook(void* renderer)
+{
+    //BeginFrame();
+    //OnOpenGlTick();
+    //EndFrame();
+
+    renderer_PresentHk->GetOriginal<void>(renderer);
+}
+
+void WaitFlipHook()
+{
+
+    waitFlipHk->GetOriginal<void>();
+}
+
+int32_t cellGcmSetFlipCommandHook(CellGcmContextData* thisContext, uint8_t id)
+{
+
+
+    return cellGcmSetFlipCommandHk->GetOriginal<int32_t>(thisContext, id);
+}
+
 void InstallHooks()
 {
    multiPlayerGameMode_useItemOnHk = new Detour(
@@ -293,7 +318,11 @@ void InstallHooks()
       *(uint32_t*)(g_GameVariables->Gui_render),
       (uintptr_t)Gui_renderHook);
 
-   sceNpBasicSetPresenceDetails2Hk = new ImportExportDetour(ImportExportDetour::Import, "sceNp", 0x5E849303, (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
+   sceNpBasicSetPresenceDetails2Hk = new ImportExportDetour(
+       ImportExportDetour::Import, 
+       "sceNp", 
+       0x5E849303, 
+       (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
 
    livingEntity_onChangedBlockHk = new Detour(
       *(uint32_t*)(g_GameVariables->LivingEntity_onChangedBlock),
@@ -322,6 +351,21 @@ void InstallHooks()
    multiPlayerGameMode_destroyBlockHk = new Detour(
       *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
       (uintptr_t)MultiPlayerGameMode_destroyBlockHook);
+
+   renderer_PresentHk = new Detour(
+       *(uintptr_t*)(g_GameVariables->Renderer_Present),
+       (uintptr_t)Renderer_PresentHook);
+
+   waitFlipHk = new Detour(
+       *(uintptr_t*)(g_GameVariables->WaitFlip),
+       (uintptr_t)WaitFlipHook);
+
+   // Swap buffers?? Universal for all games
+   cellGcmSetFlipCommandHk = new ImportExportDetour(
+       ImportExportDetour::Import,
+       "cellGcmSys",
+       0x21397818,
+       (uintptr_t)cellGcmSetFlipCommandHook);
 }
 
 void RemoveHooks()
@@ -342,4 +386,7 @@ void RemoveHooks()
    delete livingEntity_actuallyHurtHk;
    delete player_actuallyHurtHk;
    delete multiPlayerGameMode_destroyBlockHk;
+   delete renderer_PresentHk;
+   delete waitFlipHk;
+   delete cellGcmSetFlipCommandHk;
 }

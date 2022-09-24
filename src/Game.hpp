@@ -21,6 +21,8 @@ public:
 
    MAKE_FN(0xCB9A10, int, __snprintf, (char* s, size_t n, const char* format, ...));
 
+   MAKE_FN(0xCCAE60, void, ___Assert, (const char* r3, const char* r4));
+
    MAKE_FN(0xAE4CD8, uint32_t, MultiPlayerGameMode_useItemOn, (void* gameMode, void* player, void* level, void* blockPos, void* direction, void* pos, uint32_t interactionHand, bool unk1, bool* unk2));
 
    MAKE_FN(0xB33A08, void, MultiPlayerGameMode_tick, (void* multiPlayerGameMode));
@@ -112,6 +114,14 @@ public:
    MAKE_FN(0x2355E4, bool, Entity_is, (void* entity1, void* entity2));
 
    MAKE_FN(0x886798, void, ConsoleUIController_PlayUISFX, (uintptr_t consoleUIController, uintptr_t soundEvent));
+
+   MAKE_FN(0xC69D18, void, Renderer_Present, (void* renderer));
+
+   MAKE_FN(0xC67ED0, void*, Renderer_getContext, (void* renderer));
+
+   MAKE_FN(0xC69E5C, void, GlStateManager_clear, (void* renderer, uint32_t r4, uint32_t r5));
+
+   MAKE_FN(0xC69C58, void, WaitFlip, ());
 
 public:
    uintptr_t* pCInput = (uintptr_t*)0x16BD748;
