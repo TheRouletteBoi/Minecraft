@@ -291,35 +291,35 @@ int32_t cellGcmSetFlipCommandHook(CellGcmContextData* thisContext, uint8_t id)
 void InstallHooks()
 {
     multiPlayerGameMode_useItemOnHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_useItemOn),
         (uintptr_t)MultiPlayerGameMode_useItemOnHook);
 
     multiPlayerGameMode_tickHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_tick),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_tick),
         (uintptr_t)MultiPlayerGameMode_tickHook);
 
     multiPlayerLevel_setLevelHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerLevel_setLevel),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerLevel_setLevel),
         (uintptr_t)MultiPlayerLevel_setLevelHook);
 
     multiPlayerGameMode_initPlayerHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_initPlayer),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_initPlayer),
         (uintptr_t)MultiPlayerGameMode_initPlayerHook);
 
     minecraft_runMiddleHk = new Detour(
-        *(uint32_t*)(g_GameVariables->Minecraft_runMiddle),
+        *(uintptr_t*)(g_GameVariables->Minecraft_runMiddle),
         (uintptr_t)Minecraft_runMiddleHook);
 
     multiPlayerGameMode_attackHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_attack),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_attack),
         (uintptr_t)MultiPlayerGameMode_attackHook);
 
     gameRenderer_setupGuiScreenHk = new Detour(
-        *(uint32_t*)(g_GameVariables->GameRenderer_setupGuiScreen),
+        *(uintptr_t*)(g_GameVariables->GameRenderer_setupGuiScreen),
         (uintptr_t)GameRenderer_setupGuiScreenHook);
 
     gui_renderHk = new Detour(
-        *(uint32_t*)(g_GameVariables->Gui_render),
+        *(uintptr_t*)(g_GameVariables->Gui_render),
         (uintptr_t)Gui_renderHook);
 
     sceNpBasicSetPresenceDetails2Hk = new ImportExportDetour(
@@ -329,31 +329,31 @@ void InstallHooks()
         (uintptr_t)sceNpBasicSetPresenceDetails2Hook);
 
     livingEntity_onChangedBlockHk = new Detour(
-        *(uint32_t*)(g_GameVariables->LivingEntity_onChangedBlock),
+        *(uintptr_t*)(g_GameVariables->LivingEntity_onChangedBlock),
         (uintptr_t)LivingEntity_onChangedBlockHook);
 
     //livingEntity_getJumpPowerHk = new Detour(
-    //   *(uint32_t*)(g_GameVariables->LivingEntity_getJumpPower),
+    //   *(uintptr_t*)(g_GameVariables->LivingEntity_getJumpPower),
     //   (uintptr_t)LivingEntity_getJumpPowerHook, false);
 
     gameRenderer_GetFovHk = new Detour(
-        *(uint32_t*)(g_GameVariables->GameRenderer_GetFov),
+        *(uintptr_t*)(g_GameVariables->GameRenderer_GetFov),
         (uintptr_t)GameRenderer_GetFovHook);
 
     player_HurtHk = new Detour(
-        *(uint32_t*)(g_GameVariables->Player_Hurt),
+        *(uintptr_t*)(g_GameVariables->Player_Hurt),
         (uintptr_t)Player_HurtHook);
 
     livingEntity_actuallyHurtHk = new Detour(
-        *(uint32_t*)(g_GameVariables->LivingEntity_actuallyHurt),
+        *(uintptr_t*)(g_GameVariables->LivingEntity_actuallyHurt),
         (uintptr_t)LivingEntity_actuallyHurtHook);
 
     player_actuallyHurtHk = new Detour(
-        *(uint32_t*)(g_GameVariables->Player_actuallyHurt),
+        *(uintptr_t*)(g_GameVariables->Player_actuallyHurt),
         (uintptr_t)Player_actuallyHurtHook);
 
     multiPlayerGameMode_destroyBlockHk = new Detour(
-        *(uint32_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
+        *(uintptr_t*)(g_GameVariables->MultiPlayerGameMode_destroyBlock),
         (uintptr_t)MultiPlayerGameMode_destroyBlockHook);
 
     renderer_PresentHk = new Detour(
