@@ -50,7 +50,7 @@ int Minecraft_Main(int argc, char* argv[])
 
       sys_ppu_thread_exit(0);
 
-   }, 0, 3000, 8192, SYS_PPU_THREAD_CREATE_JOINABLE, "Minecraft");
+   }, 0, 3000, 0x8000, SYS_PPU_THREAD_CREATE_JOINABLE, "Minecraft");
 
 
    sys_ppu_thread_create(&gFailSafePpuThread, [](uint64_t arg)
@@ -78,7 +78,7 @@ int Minecraft_Main(int argc, char* argv[])
 
       sys_ppu_thread_exit(0);
 
-   }, 0, 0x50, 0x8000, SYS_PPU_THREAD_CREATE_JOINABLE, "FailSafeThread");
+   }, 0, 0x50, 2048, SYS_PPU_THREAD_CREATE_JOINABLE, "FailSafeThread");
 
    return 0;
 }
