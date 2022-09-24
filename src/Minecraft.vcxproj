@@ -104,8 +104,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Detour.cpp" />
     <ClCompile Include="Memory\Pattern.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Submenus.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="Util\FileSystem.cpp" />
     <ClCompile Include="Util\SystemCalls.cpp" />
@@ -876,8 +874,6 @@
     <ClInclude Include="Hooking.hpp" />
     <ClInclude Include="Memory\Detour.hpp" />
     <ClInclude Include="Memory\Pattern.hpp" />
-    <ClInclude Include="Menu.hpp" />
-    <ClInclude Include="Submenus.hpp" />
     <ClInclude Include="Util\Exports.hpp" />
     <ClInclude Include="Memory\Memory.hpp" />
     <ClInclude Include="Util\FileSystem.hpp" />

@@ -9,8 +9,6 @@
 #include "Util/SystemCalls.hpp"
 #include "Game.hpp"
 #include "Hooking.hpp"
-#include "Menu.hpp"
-#include "Submenus.hpp"
 
 SYS_MODULE_INFO(Minecraft, 0, 1, 1);
 SYS_MODULE_START(Minecraft_Main);
@@ -44,12 +42,6 @@ int Minecraft_Main(int argc, char* argv[])
 
       g_GameVariables = new GameVariables();
       g_Helpers = Helpers();
-      g_MenuTab = MenuTab(MainMenu, CombatTab, MovementTab, PlayerTab, ItemTab);
-      g_MenuTab.RegisterOnMain([]
-      {
-
-         printf("welcome to minecraft sprx mod menu\n");
-      });
 
       InstallHooks();
 
