@@ -103,7 +103,6 @@
     <ClCompile Include="Hooking.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_gcm.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_playstation3.cpp" />
-    <ClCompile Include="ImGui\backends\imgui_impl_psgl.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -882,7 +881,6 @@
     <ClInclude Include="Hooking.hpp" />
     <ClInclude Include="ImGui\backends\imgui_impl_gcm.h" />
     <ClInclude Include="ImGui\backends\imgui_impl_playstation3.h" />
-    <ClInclude Include="ImGui\backends\imgui_impl_psgl.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_internal.h" />
