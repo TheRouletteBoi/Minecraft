@@ -123,6 +123,12 @@ public:
 
    MAKE_FN(0xC69C58, void, WaitFlip, ());
 
+   MAKE_FN(0xCAA040, void, cellGcmFlush, (void* gcmContextData));
+
+   MAKE_FN(0xC720B8, uintptr_t, Renderer_DrawVertices, (uintptr_t r3, uintptr_t r4, uintptr_t r5, uintptr_t r6, uintptr_t r7, uintptr_t r8, uintptr_t r9));
+
+
+
 public:
    uintptr_t* pCInput = (uintptr_t*)0x16BD748;
    uintptr_t ConsoleUIController = 0x1558228;

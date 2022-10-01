@@ -1,5 +1,5 @@
 #include "Hooking.hpp"
-
+#include <cell/dbgfont.h>
 
 Detour* multiPlayerGameMode_useItemOnHk;
 Detour* multiPlayerGameMode_tickHk;
@@ -20,6 +20,8 @@ Detour* multiPlayerGameMode_destroyBlockHk;
 Detour* renderer_PresentHk;
 Detour* waitFlipHk;
 ImportExportDetour* cellGcmSetFlipCommandHk;
+Detour* cellGcmFlushHk;
+Detour* renderer_DrawVerticesHk;
 
 uint32_t MultiPlayerGameMode_useItemOnHook(MultiPlayerGameMode* gameMode, MultiplayerLocalPlayer** player, MultiPlayerLevel* level,
     BlockPos* blockPos, Direction* direction, Vec3* pos, uint32_t interactionHand, bool unk1, bool* unk2)
@@ -84,6 +86,8 @@ void Gui_renderHook(GuiComponent* gui, double unk)
 
     // drawing must be called after the original
     //g_MenuTab.OnGameTick();
+
+    DrawText(L"SPRX   IS   LOADED", 30, 50, 0xFFFFFFFF);
 }
 
 uint32_t LivingEntity_onChangedBlockHook(Entity* entity, BlockPos* pos)
@@ -266,6 +270,11 @@ uint32_t sceNpBasicSetPresenceDetails2Hook(SceNpBasicPresenceDetails2* pres, uin
     return sceNpBasicSetPresenceDetails2Hk->GetOriginal<uint32_t>(pres, options);
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////// TEMPORARY CODE UNTILL i GET GCM RENDERING WORKING //////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define CELL_GCMUTIL_ATTR_POSITION		(CG_ATTR0 - CG_ATTR0) 
 #define CELL_GCMUTIL_ATTR_BLENDWEIGHT	(CG_ATTR1 - CG_ATTR0) 
 #define CELL_GCMUTIL_ATTR_NORMAL		(CG_ATTR2 - CG_ATTR0) 
@@ -338,8 +347,13 @@ struct vec2_t
     float x, y;
 };
 
-void RB_GCMDrawQuad(cell::Gcm::Inline::CellGcmContext* gcmContext, float x, float y, float z, float width, float height, float* color)
+CellGcmContextData* g_CellGcmContextData = nullptr;
+cell::Gcm::Inline::CellGcmContext& g_gcmContext = *reinterpret_cast<cell::Gcm::Inline::CellGcmContext*>(0x183E4CC);
+
+void RB_GCMDrawQuad(float x, float y, float z, float width, float height, float* color)
 {
+    const uint32_t VTX_NUMBER = 4;
+
     // setup vertex attribute
     struct GfxVertexFUCK
     {
@@ -356,30 +370,25 @@ void RB_GCMDrawQuad(cell::Gcm::Inline::CellGcmContext* gcmContext, float x, floa
         { { x + width, y + height, 0.f, 1.0f }, color, { 0.0f, 1.0f }, { 2143289344 } }
     };
 
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, sizeof(GfxVertexFUCK), 4, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
 
     // draw
-    gcmContext->SetDrawInlineArray(CELL_GCM_PRIMITIVE_POLYGON, 4 * sizeof(GfxVertexFUCK) / sizeof(float), vertex);
+    g_gcmContext.SetDrawInlineArray(CELL_GCM_PRIMITIVE_POLYGON, 4 * sizeof(GfxVertexFUCK) / sizeof(float), vertex);
 
     // invalidate vertex attribute
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
-    gcmContext->SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_POSITION, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_COLOR, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_TEXCOORD0, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
+    g_gcmContext.SetVertexDataArray(CELL_GCMUTIL_ATTR_NORMAL, 0, 0, 0, CELL_GCM_VERTEX_F, CELL_GCM_LOCATION_LOCAL, 0);
 }
 
 void TestGcmRendering()
 {
-    cell::Gcm::Inline::CellGcmContext* gcmContext = nullptr;
-
-    if (!gcmContext)
-        return;
-
     float color[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
-    RB_GCMDrawQuad(gcmContext, 400, 400, 0.f, 500, 500, color);
+    RB_GCMDrawQuad(400, 400, 0.f, 500, 500, color);
 }
 
 void Renderer_PresentHook(void* renderer)
@@ -399,8 +408,26 @@ void WaitFlipHook()
 
 int32_t cellGcmSetFlipCommandHook(CellGcmContextData* thisContext, uint8_t id)
 {
+    printf("cellGcmSetFlipCommandHook\n");
+    printf("thisContext 0x%X\n", thisContext);
+
+    //TestGcmRendering();
+
+    g_CellGcmContextData = thisContext;
 
     return cellGcmSetFlipCommandHk->GetOriginal<int32_t>(thisContext, id);
+}
+
+void cellGcmFlushHook(CellGcmContextData* thisContext)
+{
+
+    cellGcmFlushHk->GetOriginal<void>(thisContext);
+}
+
+uintptr_t Renderer_DrawVerticesHook(uintptr_t r3, uintptr_t r4, uintptr_t r5, uintptr_t r6, uintptr_t r7, uintptr_t r8, uintptr_t r9)
+{
+
+    return renderer_DrawVerticesHk->GetOriginal<uintptr_t>(r3, r4, r5, r6, r7, r8, r9);
 }
 
 void InstallHooks()
@@ -485,6 +512,14 @@ void InstallHooks()
         "cellGcmSys",
         0x21397818,
         (uintptr_t)cellGcmSetFlipCommandHook);
+
+    cellGcmFlushHk = new Detour(
+        *(uintptr_t*)(g_GameVariables->cellGcmFlush),
+        (uintptr_t)cellGcmFlushHook);
+
+    renderer_DrawVerticesHk = new Detour(
+        *(uintptr_t*)(g_GameVariables->Renderer_DrawVertices),
+        (uintptr_t)Renderer_DrawVerticesHook);
 }
 
 void RemoveHooks()
@@ -508,4 +543,6 @@ void RemoveHooks()
     delete renderer_PresentHk;
     delete waitFlipHk;
     delete cellGcmSetFlipCommandHk;
+    delete cellGcmFlushHk;
+    delete renderer_DrawVerticesHk;
 }
