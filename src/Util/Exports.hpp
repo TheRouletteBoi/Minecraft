@@ -44,3 +44,9 @@ extern "C" void* _sys_memset(void* m, int c, size_t n);
 
 extern "C" void* _sys_memmove(void* str1, const void* str2, size_t n);
 #define memmove _sys_memmove
+
+extern "C" int _sys_vsprintf(char* str, const char* format, va_list arg);
+#define vsprintf _sys_vsprintf
+
+extern "C" int _sys_vsnprintf(char* s, size_t n, const char* fmt, va_list arg);
+#define vsnprintf _sys_vsnprintf
