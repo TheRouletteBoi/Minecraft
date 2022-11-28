@@ -3,13 +3,13 @@
 #include "Enums.hpp"
 #include "Game.hpp"
 
-#include "Engine/gamemode/GameMode.h"
-#include "Engine/client/Minecraft.h"
-#include "Engine/entity/player/ServerPlayer.h"
-#include "Engine/world/entity/DamageSource.h"
-#include "Engine/util/Direction.h"
-#include "Engine/world/level/block/BlockPos.h"
-#include "Engine/client/gui/GuiComponent.h"
+#include "Mojang/gamemode/GameMode.h"
+#include "Mojang/client/Minecraft.h"
+#include "Mojang/entity/player/ServerPlayer.h"
+#include "Mojang/world/entity/DamageSource.h"
+#include "Mojang/util/Direction.h"
+#include "Mojang/world/level/block/BlockPos.h"
+#include "Mojang/client/gui/GuiComponent.h"
 
 class Helpers
 {
