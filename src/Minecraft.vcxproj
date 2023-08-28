@@ -51,11 +51,13 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <TargetExt>.prx</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <TargetExt>.prx</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
     <ClCompile>
@@ -70,9 +72,12 @@
     </Link>
     <Link>
       <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
+      <OutputFormat>PRXFile</OutputFormat>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST "$(TargetDir)loadSprx.exe"  "$(TargetDir)loadSprx.exe"</Command>
+      <Command>cd "$(SolutionDir)vendor\scetool\bin\"
+scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1</Command>
+      <Message>Sign PRX (scetool)</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
@@ -92,9 +97,12 @@
       <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
       <InfoStripping>StripSymsAndDebug</InfoStripping>
       <DataStripping>StripFuncsAndData</DataStripping>
+      <OutputFormat>PRXFile</OutputFormat>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST "$(TargetDir)loadSprx.exe"  "$(TargetDir)loadSprx.exe"</Command>
+      <Command>cd "$(SolutionDir)vendor\scetool\bin\"
+scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1</Command>
+      <Message>Sign PRX (scetool)</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
