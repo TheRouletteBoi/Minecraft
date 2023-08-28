@@ -1,0 +1,3 @@
+Minecraft.sprx
+useLoader=true
+192.168.0.46
