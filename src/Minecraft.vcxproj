@@ -76,7 +76,9 @@
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)vendor\scetool\bin\"
-scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1</Command>
+scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1
+cd "$(SolutionDir)vendor\loadSprx\bin\"
+loadSprx.exe</Command>
       <Message>Sign PRX (scetool)</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -101,7 +103,9 @@ scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 AP
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)vendor\scetool\bin\"
-scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1</Command>
+scetool.exe -0 SELF -1 TRUE -s FALSE -2 0A -3 1070000052000001 -4 01000002 -5 APP -6 0003004000000000 -A 0001000000000000 --self-ctrl-flags 4000000000000000000000000000000000000000000000000000000000000002 -e "$(TargetDir)$(TargetName)$(TargetExt)" "$(TargetDir)$(TargetName).sprx" 2&gt;&amp;1
+cd "$(SolutionDir)vendor\loadSprx\bin\"
+loadSprx.exe</Command>
       <Message>Sign PRX (scetool)</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
